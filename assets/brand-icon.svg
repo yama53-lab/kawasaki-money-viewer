@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">かわさき Money Viewer Kモノグラム</title>
+  <path d="M14 4h36c6 0 10 4 10 10v34L48 60H14C8 60 4 56 4 50V14C4 8 8 4 14 4Z" fill="#063b4c"/>
+  <path d="M20 14v36M24 33l20-20" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="m25 35 20 17" fill="none" stroke="#5eb5b7" stroke-width="8" stroke-linecap="square"/>
+  <circle cx="25" cy="34" r="9" fill="#f4b942"/>
+  <path d="m21 29 4 5 4-5M25 34v7M21 36h8M21 39h8" fill="none" stroke="#063b4c" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter"/>
+</svg>

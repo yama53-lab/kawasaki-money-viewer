@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">かわさき Money Viewer コイン型K</title>
+  <g fill="#063b4c">
+    <path d="M25 18.4A60 60 0 0 0 25 109.6Z"/>
+    <path d="M42 8.2A60 60 0 0 1 95 12.6L42 61Z"/>
+    <path d="M42 70L95 115.4A60 60 0 0 1 42 119.8Z"/>
+    <path d="M67 61.5L108 27.5Q111 25 111 29V99Q111 103 108 100.5L67 66.5Q64 64 67 61.5Z"/>
+  </g>
+  <path d="M114 30.8A60 60 0 0 1 114 97.2Z" fill="#f4b942"/>
+</svg>

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="かわさき Money Viewerの目的、収録年度、川崎市の公開PDFからのデータ抽出方法と更新方針をご案内します。" />
+    <meta name="theme-color" content="#063b4c" />
+    <title>このサイト・データについて｜かわさき Money Viewer</title>
+    <link rel="icon" type="image/svg+xml" href="assets/brand-coin.svg" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">本文へ移動</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="./" aria-label="かわさき Money Viewer トップ">
+          <img class="brand-mark" src="assets/brand-coin.svg" alt="" aria-hidden="true" />
+          <span><strong>かわさき Money Viewer</strong><small>補助・助成金を見つける</small></span>
+        </a>
+        <a class="source-link source-link--header" href="./">検索ページへ <span aria-hidden="true">↗</span></a>
+      </div>
+    </header>
+    <main class="info-page" id="content">
+      <div class="info-intro">
+        <a class="info-back" href="./">← 補助・助成金を検索する</a>
+        <p class="eyebrow">ABOUT / このサイトの背景</p>
+        <h1>このサイト・データについて</h1>
+        <p class="info-lead">公開されている数字を、年度を越えて読み解くために。</p>
+      </div>
+      <div class="info-layout">
+        <nav class="info-toc" aria-label="このページの目次">
+          <p class="section-number">CONTENTS</p>
+          <a href="#purpose">サイトの目的</a>
+          <a href="#coverage">収録範囲と出典</a>
+          <a href="#extraction">データの抽出方法</a>
+          <a href="#updates">更新方針</a>
+        </nav>
+        <div class="info-body">
+          <section id="purpose" aria-labelledby="purpose-title">
+            <p class="section-number">01 / PURPOSE</p>
+            <h2 id="purpose-title">サイトの目的</h2>
+            <p>かわさき Money Viewerは、川崎市がPDFで公開する「補助・助成金一覧表」を、検索・年度比較しやすい形に整理した静的サイトです。制度名や交付先から探し、予算と決算、年度ごとの金額の推移を確認できます。</p>
+            <div class="info-callout">
+              <strong>川崎市とは無関係の非公式サイトです。</strong>
+              <p>川崎市が運営・監修・承認するサイトではありません。制度の申請受付や、補助金の受給可否の判定も行いません。</p>
+            </div>
+            <p>このサイトの数字は、制度の支出規模を知るためのものです。補助金の有効性や、個々の申請者が受け取れる金額を示すものではありません。</p>
+          </section>
+          <section id="coverage" aria-labelledby="coverage-title">
+            <p class="section-number">02 / SOURCE</p>
+            <h2 id="coverage-title">収録範囲と出典</h2>
+            <dl class="info-facts">
+              <div><dt>予算</dt><dd>平成19年度〜令和8年度（20年度分）</dd></div>
+              <div><dt>決算</dt><dd>平成17年度〜令和6年度（20年度分）</dd></div>
+              <div><dt>同年度比較</dt><dd>平成19年度〜令和6年度（18年度分）</dd></div>
+              <div><dt>データ更新日</dt><dd>2026年10月3日（現在の収録データ）</dd></div>
+            </dl>
+            <p>収録対象は、下記の公式ページに掲載された予算・決算の補助・助成金一覧表です。川崎市の予算・決算全体や、すべての給付制度を網羅するものではありません。</p>
+            <ul class="info-links">
+              <li><a href="https://www.city.kawasaki.jp/230/page/0000075957.html" target="_blank" rel="noopener noreferrer">川崎市「補助・助成金一覧表（最新年度）」 ↗</a></li>
+              <li><a href="https://www.city.kawasaki.jp/230/page/0000148865.html" target="_blank" rel="noopener noreferrer">川崎市「補助・助成金一覧表（過年度）」 ↗</a></li>
+            </ul>
+            <p>検索ページでは、選択年度に対応する原資料PDFへのリンクを表示しています。金額・所管局・交付先などを引用するときは、その年度の原資料も確認してください。</p>
+          </section>
+          <section id="extraction" aria-labelledby="extraction-title">
+            <p class="section-number">03 / METHOD</p>
+            <h2 id="extraction-title">データの抽出方法</h2>
+            <ol class="info-steps">
+              <li><strong>公式PDFを取得</strong><p>最新年度・過年度の公式ページから、予算・決算の一覧表PDFを取得します。</p></li>
+              <li><strong>表の文字と数値を抽出</strong><p>PDFの表をプログラム（pdfplumber）で読み取り、名称・金額・交付先・所管局などを取り出します。空白や一部の文字表記を整え、資料種別・年度別のJSONに保存します。</p></li>
+              <li><strong>合計額を照合</strong><p>原資料の合計欄を抽出できた場合は、明細の合計と照合します。不一致の場合は処理を停止します。ただし、合計の一致だけで、個々の項目の正確性が保証されるわけではありません。</p></li>
+              <li><strong>比較・グラフ用に整理</strong><p>全角・半角や空白などの表記を整えた名称で項目を対応付けます。制度の内容を判定して結び付けているわけではありません。</p></li>
+            </ol>
+            <p>金額は原資料の千円単位で保持し、表示時に円・万円・億円へ換算します。大きな金額は読みやすく丸め、原資料の千円単位も併記しています。計算には丸める前の値を使用します。</p>
+            <p>古い資料では、前年度額・継続年数・分類が掲載されていない場合があります。原資料にない情報を推測して補完することはせず、該当する比較やフィルターを利用できない形にしています。</p>
+            <p>抽出・対応付けの限界については、<a href="help.html#matching">名称による比較の注意点</a>と<a href="policy.html#accuracy">データの正確性に関する注意</a>もご確認ください。</p>
+          </section>
+          <section id="updates" aria-labelledby="updates-title">
+            <p class="section-number">04 / UPDATE</p>
+            <h2 id="updates-title">更新方針</h2>
+            <p>現在は、更新作業を行う際に公式ページと対象PDFを確認し、データを再生成・確認して反映する運用です。定期的な自動更新や、公式ページの変更の即時反映は行っていません。</p>
+            <p>「データ更新日」はこのサイトのデータを生成・更新した日です。川崎市が資料を公表・修正した日とは異なります。公式資料の差し替えや訂正が、このサイトにまだ反映されていない場合があります。</p>
+            <p>新しい年度の資料を追加した際は、収録範囲も見直します。抽出できない資料や確認が必要な資料は、修正・確認後に反映するため、掲載が遅れることがあります。</p>
+          </section>
+          <a class="secondary-button info-search-link" href="./">検索ページへ戻る</a>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div><p>かわさき Money Viewer</p><small>川崎市とは無関係の非公式サイト</small></div>
+      <nav class="footer-nav" aria-label="サイト案内">
+        <a href="about.html" aria-current="page">このサイト・データについて</a>
+        <a href="help.html">使い方・よくある質問</a>
+        <a href="policy.html">利用上の注意・プライバシー</a>
+      </nav>
+    </footer>
+  </body>
+</html>

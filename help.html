@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="かわさき Money Viewerの検索・グラフの使い方と、掲載件数、予算差、執行率などの数字の意味をご案内します。" />
+    <meta name="theme-color" content="#063b4c" />
+    <title>使い方・よくある質問｜かわさき Money Viewer</title>
+    <link rel="icon" type="image/svg+xml" href="assets/brand-coin.svg" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">本文へ移動</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="./" aria-label="かわさき Money Viewer トップ">
+          <img class="brand-mark" src="assets/brand-coin.svg" alt="" aria-hidden="true" />
+          <span><strong>かわさき Money Viewer</strong><small>補助・助成金を見つける</small></span>
+        </a>
+        <a class="source-link source-link--header" href="./">検索ページへ <span aria-hidden="true">↗</span></a>
+      </div>
+    </header>
+    <main class="info-page" id="content">
+      <div class="info-intro">
+        <a class="info-back" href="./">← 補助・助成金を検索する</a>
+        <p class="eyebrow">GUIDE / 数字の読み方</p>
+        <h1>使い方・よくある質問</h1>
+        <p class="info-lead">探し方から、比較するときの注意点まで。</p>
+      </div>
+      <div class="info-layout">
+        <nav class="info-toc" aria-label="このページの目次">
+          <p class="section-number">CONTENTS</p>
+          <a href="#search">検索の使い方</a>
+          <a href="#budget">予算と決算の違い</a>
+          <a href="#counts">掲載件数・集計の意味</a>
+          <a href="#calculations">予算差・執行率の計算</a>
+          <a href="#matching">比較できない場合</a>
+          <a href="#graph">グラフの操作</a>
+        </nav>
+        <div class="info-body">
+          <section id="search" aria-labelledby="search-title">
+            <p class="section-number">01 / SEARCH</p>
+            <h2 id="search-title">どうやって検索しますか？</h2>
+            <ol class="info-steps">
+              <li><strong>資料種別と年度を選ぶ</strong><p>「決算」「予算」「予算・決算比較」から選び、対象年度を指定します。比較では、両方の資料がある年度を選べます。</p></li>
+              <li><strong>キーワードや条件で絞る</strong><p>補助金名・交付先・所管局・分類に含まれる言葉で検索できます。所管局、交付先区分、金額、増減の条件も組み合わせられます。</p></li>
+              <li><strong>並び替え・詳細・原資料を確認する</strong><p>金額や差額の大きさなどで並び替えられます。「年度推移を見る」でグラフを開き、「元PDFを確認する」などのリンクで公式資料を確認できます。</p></li>
+            </ol>
+            <p>一覧は最初に30件を表示します。「続きを表示」で残りの項目を追加できます。条件を外したいときは、条件のラベルを押すか「条件をリセット」を使ってください。</p>
+          </section>
+          <section id="budget" aria-labelledby="budget-title">
+            <p class="section-number">02 / BASIC</p>
+            <h2 id="budget-title">予算と決算は何が違いますか？</h2>
+            <dl class="info-facts">
+              <div><dt>予算額</dt><dd>対象年度の予算資料に掲載された、支出を予定する金額です。</dd></div>
+              <div><dt>決算額</dt><dd>対象年度の決算資料に掲載された、実際の支出結果の金額です。</dd></div>
+            </dl>
+            <p>このサイトは一覧表に掲載された額を使用します。当初予算・補正予算などの内訳は独自に区別していません。どの時点の予算を示すかは、原資料で確認してください。</p>
+            <p>予算額と決算額の差には、利用件数や事業内容の変化など、さまざまな理由があります。差額だけで「無駄」「不足」などを判断することはできません。</p>
+          </section>
+          <section id="counts" aria-labelledby="counts-title">
+            <p class="section-number">03 / COUNTS</p>
+            <h2 id="counts-title">掲載件数と「金額あり」はなぜ違うのですか？</h2>
+            <p>「掲載件数」は、選択した年度の資料から取り込んだ全項目の数です。金額が0円の項目も含みます。「決算額あり」「予算額あり」は、その年度の金額が0円より大きい項目の数です。</p>
+            <div class="info-callout">
+              <strong>例：令和6年度の決算</strong>
+              <p>全381件のうち、決算額ありは355件、0円は26件です。381件と355件は、異なる範囲を数えているため矛盾しません。</p>
+            </div>
+            <h3>絞り込んでも、上の集計が変わらないのはなぜ？</h3>
+            <p>検索欄の下の集計は「選択した年度全体」の数字です。キーワードやフィルターで絞り込んだ一覧だけの件数・合計額ではありません。</p>
+            <h3>比較モードの「名称が一致した項目」とは？</h3>
+            <p>同年度の予算資料と決算資料で、表記を整えた名称が一致した項目の数です。「全○件」には、予算のみ・決算のみの項目も含みます。集計欄の予算額・決算額は、それぞれの資料全体の合計で、名称が一致した項目だけの合計ではありません。</p>
+            <h3>0円や「新規」は何を意味しますか？</h3>
+            <p>0円は取り込んだ資料上の金額であり、制度の廃止を断定するものではありません。「新規・前年度0円」は前年度額が0円で当年度額がある項目を示し、制度がその年度に新設されたことを保証しません。</p>
+          </section>
+          <section id="calculations" aria-labelledby="calculations-title">
+            <p class="section-number">04 / CALCULATION</p>
+            <h2 id="calculations-title">予算差・執行率はどう計算しますか？</h2>
+            <div class="info-formula"><span>予算差</span><strong>決算額 − 予算額</strong></div>
+            <p>プラスは決算が予算を上回り、マイナスは決算が予算を下回ることを表します。「差額の大きさ：大きい順」は、符号を除いた差額の大きさ（絶対値）で並べます。</p>
+            <div class="info-formula"><span>執行率</span><strong>決算額 ÷ 予算額 × 100</strong></div>
+            <p>小数第1位まで表示します。予算額が0円、または片方の資料に項目がない場合、執行率は計算せず「—」を表示します。片方の項目がない場合は、予算差も「—」です。</p>
+            <div class="info-callout">
+              <strong>予算100万円、決算80万円の場合</strong>
+              <p>予算差は−20万円、執行率は80.0%です。集計欄の執行率は「決算総額 ÷ 予算総額 × 100」で、各項目の執行率の平均ではありません。</p>
+            </div>
+            <h3>前年度比や表示単位は？</h3>
+            <p>予算・決算を単独で見る場合の増減額は「対象年度額 − 原資料に掲載された前年度額」です。前年度の別PDFを突き合わせて計算する方式ではありません。</p>
+            <p>原資料の1千円は1,000円、1,000千円は100万円です。表示を丸める前の千円単位の値で計算するため、画面上の丸められた数字を引き算すると、表示差額とずれる場合があります。</p>
+          </section>
+          <section id="matching" aria-labelledby="matching-title">
+            <p class="section-number">05 / MATCHING</p>
+            <h2 id="matching-title">同じ制度なのに比較できないのはなぜ？</h2>
+            <p>比較とグラフは、全角・半角、空白、一部の記号などの表記を整えた名称をもとに対応付けています。名称変更・事業の統合や分割を、制度の内容から自動判定する機能はありません。</p>
+            <p>同じ制度でも名前が変わると、別項目として扱われたり、年度推移が分かれたりします。逆に、同じ名称でも制度内容が変わっている場合や、同じ名称の複数項目を正しく区別できない場合があります。厳密な比較には原資料の交付先・所管局・制度内容も確認してください。</p>
+            <p>「予算のみ」「決算のみ」は、対応する名称の項目が片方の資料に見つからなかったという意味です。制度が新設・廃止されたことや、金額が0円だったことを直接意味しません。</p>
+            <p>古い年度では原資料に前年度額・交付先区分などがなく、一部の条件が選べないことがあります。</p>
+          </section>
+          <section id="graph" aria-labelledby="graph-title">
+            <p class="section-number">06 / GRAPH</p>
+            <h2 id="graph-title">年度別グラフはどう操作しますか？</h2>
+            <p>一覧の「年度推移を見る」を押すと、横軸が年度、縦軸が金額の棒グラフが開きます。各年度の濃い青緑の棒が予算、黄色の棒が決算です。Hは平成、Rは令和を表し、H31/R1は2019年度です。</p>
+            <ul>
+              <li><strong>パソコン：</strong>棒にマウスを合わせると、年度・資料種別・金額・原資料の千円単位を表示します。</li>
+              <li><strong>スマートフォン：</strong>棒をタップして金額を確認します。年度が画面に収まらない場合は、グラフ内を左右にスワイプできます。</li>
+              <li><strong>キーボード：</strong>Tabキーで棒を選ぶと金額を表示します。グラフのスクロール領域を選んだ状態では、左右の矢印キーで移動できます。</li>
+              <li><strong>閉じる：</strong>右上の「×」を押します。キーボードではEscキーでも閉じられます。</li>
+            </ul>
+            <p>開いた直後は、選択中の年度ができるだけ中央付近に来るように表示します。両端の年度ではスクロールできる範囲の都合で中央にならない場合があります。収まる場合は横スクロールを必要としません。</p>
+            <p>片方のデータがない年度は、その棒の代わりに破線状の目印を表示します。未掲載・未収録などによる「データなし」と、金額が「0円」の場合は異なります。縦軸の上限は項目ごとに変わるため、別の項目同士は棒の高さだけで比較しないでください。</p>
+          </section>
+          <a class="secondary-button info-search-link" href="./">検索ページへ戻る</a>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div><p>かわさき Money Viewer</p><small>川崎市とは無関係の非公式サイト</small></div>
+      <nav class="footer-nav" aria-label="サイト案内">
+        <a href="about.html">このサイト・データについて</a>
+        <a href="help.html" aria-current="page">使い方・よくある質問</a>
+        <a href="policy.html">利用上の注意・プライバシー</a>
+      </nav>
+    </footer>
+  </body>
+</html>

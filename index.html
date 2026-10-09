@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="川崎市が公開する補助・助成金一覧を検索し、年度間や同年度の予算・決算を比較できる非公式ビューアです。"
+    />
+    <meta name="theme-color" content="#063b4c" />
+    <title>かわさき Money Viewer</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="assets/brand-coin.svg"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/data-validation.js" defer></script>
+    <script src="js/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#results">検索結果へ移動</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="./" aria-label="かわさき Money Viewer トップ">
+          <img class="brand-mark" src="assets/brand-coin.svg" alt="" aria-hidden="true" />
+          <span>
+            <strong>かわさき Money Viewer</strong>
+            <small>補助・助成金を見つける</small>
+          </span>
+        </a>
+        <a
+          class="source-link source-link--header"
+          href="https://www.city.kawasaki.jp/230/page/0000075957.html"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          川崎市の公開ページ
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow" id="dataset-kicker">予算・決算 / 40年度資料</p>
+          <h1 id="page-title">年度を越えて、<br />数字を読み解く。</h1>
+        </div>
+        <p class="intro-copy">
+          川崎市がPDFで公開する予算と決算を整理。年度を切り替えながら検索し、同じ年度の予算額と決算額も比較できます。
+        </p>
+      </section>
+
+      <section class="search-panel" aria-labelledby="search-title">
+        <div class="panel-heading">
+          <div>
+            <p class="section-number">01 / SEARCH</p>
+            <h2 id="search-title">条件を絞り込む</h2>
+          </div>
+          <button id="reset-button" class="text-button" type="button">条件をリセット</button>
+        </div>
+
+        <div class="dataset-controls" aria-label="表示する資料">
+          <fieldset>
+            <legend>資料種別</legend>
+            <div class="type-switch" id="type-switch">
+              <button type="button" data-type="settlement" aria-pressed="true">決算</button>
+              <button type="button" data-type="budget" aria-pressed="false">予算</button>
+              <button type="button" data-type="comparison" aria-pressed="false">予算・決算比較</button>
+            </div>
+          </fieldset>
+          <label>
+            <span>対象年度</span>
+            <select id="year-select" aria-label="対象年度"></select>
+          </label>
+          <p id="dataset-status" class="dataset-status" aria-live="polite"></p>
+        </div>
+
+        <div class="search-primary">
+          <label for="keyword">キーワード</label>
+          <div class="search-input-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5"></circle>
+              <path d="m16 16 4 4"></path>
+            </svg>
+            <input
+              id="keyword"
+              type="search"
+              placeholder="補助金名・交付先・分類から検索"
+              autocomplete="off"
+              maxlength="200"
+            />
+          </div>
+        </div>
+
+        <div class="filters">
+          <label>
+            <span>所管局</span>
+            <select id="bureau-filter">
+              <option value="">すべての所管局</option>
+            </select>
+          </label>
+          <label>
+            <span>交付先区分</span>
+            <select id="recipient-filter">
+              <option value="">すべての区分</option>
+            </select>
+          </label>
+          <label>
+            <span id="amount-filter-label">対象年度の金額</span>
+            <select id="amount-filter">
+              <option value="">すべての金額</option>
+              <option value="1">1,000円以上</option>
+              <option value="1000">100万円以上</option>
+              <option value="10000">1,000万円以上</option>
+              <option value="100000">1億円以上</option>
+            </select>
+          </label>
+          <label>
+            <span id="change-filter-label">前年度比</span>
+            <select id="change-filter">
+              <option value="">すべて</option>
+              <option value="increase">増額</option>
+              <option value="decrease">減額</option>
+              <option value="same">同額</option>
+              <option value="new">新規・前年度0円</option>
+              <option value="ended">終了・支出なし</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="summary" aria-label="集計概要">
+        <article>
+          <span class="summary-label" id="summary-count-label">掲載件数</span>
+          <strong id="summary-count">—</strong>
+          <small id="summary-count-note">選択年度に掲載</small>
+        </article>
+        <article>
+          <span class="summary-label" id="summary-total-label">対象年度の金額</span>
+          <strong id="summary-total">—</strong>
+          <small class="summary-source" id="summary-total-source">原資料：—</small>
+        </article>
+        <article>
+          <span class="summary-label" id="summary-change-label">前年度からの増減</span>
+          <strong id="summary-change">—</strong>
+          <small class="summary-source" id="summary-change-source">原資料：—</small>
+          <small id="summary-change-note">前年度との比較</small>
+        </article>
+      </section>
+
+      <section id="results" class="results-section" aria-labelledby="results-title">
+        <div class="results-heading">
+          <div>
+            <p class="section-number">02 / RESULTS</p>
+            <h2 id="results-title">検索結果</h2>
+          </div>
+          <label class="sort-control">
+            <span>並び替え</span>
+            <select id="sort-select">
+              <option value="amount-desc">対象年度額：大きい順</option>
+              <option value="change-desc">増加額：大きい順</option>
+              <option value="change-asc">減少額：大きい順</option>
+              <option value="years-desc">継続年数：長い順</option>
+              <option value="number-asc">掲載順</option>
+            </select>
+          </label>
+        </div>
+
+        <div id="active-filters" class="active-filters" aria-live="polite"></div>
+
+        <div class="table-wrap" tabindex="0" aria-label="補助・助成金一覧。横にスクロールできます">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">補助・助成金</th>
+                <th scope="col">所管局</th>
+                <th scope="col" class="number-cell" id="current-year-heading">対象年度</th>
+                <th scope="col" class="number-cell" id="previous-year-heading">前年度</th>
+                <th scope="col" class="number-cell" id="change-heading">増減</th>
+                <th scope="col" id="years-heading">継続</th>
+              </tr>
+            </thead>
+            <tbody id="result-body"></tbody>
+          </table>
+        </div>
+
+        <div id="empty-state" class="empty-state" hidden>
+          <strong>該当する補助・助成金がありません</strong>
+          <p>キーワードを短くするか、条件を減らしてみてください。</p>
+          <button type="button" class="secondary-button" data-reset>すべての条件を解除</button>
+        </div>
+
+        <div class="load-more-wrap">
+          <button id="load-more" class="secondary-button" type="button" hidden>続きを表示</button>
+        </div>
+      </section>
+
+      <section class="notes" aria-labelledby="notes-title">
+        <div>
+          <p class="section-number">03 / SOURCE</p>
+          <h2 id="notes-title">データについて</h2>
+        </div>
+        <div class="notes-body">
+          <p>
+            川崎市が公開する補助・助成金一覧表を、予算・決算・年度ごとに検索しやすい形へ整理した非公式サイトです。金額は億円・万円へ換算し、原資料の千円単位も併記しています。
+          </p>
+          <dl>
+            <div><dt>対象資料</dt><dd id="source-dataset">—</dd></div>
+            <div><dt>収録範囲</dt><dd>予算：令和8〜平成19年度 / 決算：令和6〜平成17年度</dd></div>
+            <div><dt>データ更新</dt><dd id="source-updated">—</dd></div>
+            <div><dt>掲載件数</dt><dd id="source-count">—</dd></div>
+          </dl>
+          <p class="caution">
+            内容の正確性や最新情報は、必ず川崎市の原資料をご確認ください。個別制度の申請条件や募集状況は、各所管局へお問い合わせください。
+          </p>
+          <div class="source-links">
+            <a
+              class="source-link"
+              id="source-pdf-link"
+              href="https://www.city.kawasaki.jp/230/cmsfiles/contents/0000075/75957/R6kessanhojyokin.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              元PDFを確認する <span aria-hidden="true">↗</span>
+            </a>
+            <a
+              class="source-link"
+              id="source-budget-pdf-link"
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              hidden
+            >
+              予算PDFを確認する <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="trend-dialog" class="trend-dialog" aria-labelledby="trend-title">
+      <div class="trend-panel">
+        <button id="trend-close" class="dialog-close" type="button" aria-label="詳細を閉じる">×</button>
+        <p class="eyebrow">年度別の予算・決算</p>
+        <h2 id="trend-title">項目詳細</h2>
+        <p id="trend-meta" class="trend-meta"></p>
+
+        <div class="trend-legend" aria-label="グラフの凡例">
+          <span><i class="legend-swatch legend-swatch--budget"></i>予算</span>
+          <span><i class="legend-swatch legend-swatch--settlement"></i>決算</span>
+        </div>
+
+        <div id="trend-loading" class="trend-loading" role="status">年度別データを読み込んでいます…</div>
+        <div id="trend-chart" class="trend-chart" hidden>
+          <div id="trend-y-axis" class="trend-y-axis" aria-hidden="true"></div>
+          <div class="trend-scroll" tabindex="0" aria-label="年度別グラフ。横にスクロールできます">
+            <div id="trend-plot" class="trend-plot"></div>
+          </div>
+        </div>
+        <p id="trend-note" class="trend-note"></p>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div><p>かわさき Money Viewer</p><small>川崎市とは無関係の非公式サイト</small></div>
+      <nav class="footer-nav" aria-label="サイト案内">
+        <a href="about.html">このサイト・データについて</a>
+        <a href="help.html">使い方・よくある質問</a>
+        <a href="policy.html">利用上の注意・プライバシー</a>
+      </nav>
+    </footer>
+
+    <template id="result-row-template">
+      <tr>
+        <td class="name-cell">
+          <div class="badge-line"></div>
+          <strong></strong>
+          <span class="recipient"></span>
+          <span class="mobile-meta"></span>
+          <dl class="mobile-comparison"></dl>
+          <button class="detail-button" type="button">年度推移を見る</button>
+        </td>
+        <td class="bureau"></td>
+        <td class="number-cell current"></td>
+        <td class="number-cell previous"></td>
+        <td class="number-cell change"></td>
+        <td class="years"></td>
+      </tr>
+    </template>
+  </body>
+</html>
