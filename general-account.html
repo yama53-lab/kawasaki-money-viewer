@@ -77,6 +77,7 @@
         </section>
 
         <nav class="account-toc" aria-label="一般会計ページ内メニュー">
+          <a href="#flow">全体のお金の流れ<span>サンキー図</span></a>
           <a href="#changes">前年度との比較<span>主な変化</span></a>
           <a href="#revenue">お金の入り口<span>歳入</span></a>
           <a href="#purpose">何に使うか<span>目的別歳出</span></a>
@@ -84,9 +85,25 @@
           <a href="#per-capita">1人あたり<span>使いみち</span></a>
         </nav>
 
+        <section id="flow" class="account-section" aria-labelledby="flow-title">
+          <div class="account-section-heading">
+            <div><p class="section-number">01 / FLOW</p><h2 id="flow-title">歳入から歳出への<br />全体像</h2></div>
+            <p>左側の歳入が中央の一般会計へ入り、右側の目的別歳出として使われる全体構成を、帯の太さで表しています。</p>
+          </div>
+          <div class="sankey-panel">
+            <div class="sankey-legend" aria-hidden="true"><span><i class="sankey-key sankey-key--revenue"></i>歳入</span><span><i class="sankey-key sankey-key--expense"></i>目的別歳出</span><span>帯が太いほど金額が大きい</span></div>
+            <p class="sankey-instruction">項目または帯を選ぶと、金額と構成比を確認できます。横幅が狭い画面では図を左右にスクロールできます。</p>
+            <div class="sankey-scroll" tabindex="0" aria-label="一般会計のサンキー図。横にスクロールできます">
+              <svg id="account-sankey" class="account-sankey" viewBox="0 0 1200 690" role="img" aria-labelledby="sankey-title sankey-description"></svg>
+            </div>
+            <div id="sankey-detail" class="sankey-detail" aria-live="polite"><strong>図の見方</strong><span>左の歳入と右の目的別歳出は、それぞれ金額上位7項目と「その他」で表示します。</span></div>
+            <p class="account-footnote">この図は歳入と歳出それぞれの構成を示すものです。特定の歳入が特定の歳出に充てられたことを示すものではありません。全項目は下の詳しい表で確認できます。</p>
+          </div>
+        </section>
+
         <section id="changes" class="account-section" aria-labelledby="changes-title">
           <div class="account-section-heading">
-            <div><p class="section-number">01 / CHANGE</p><h2 id="changes-title">前年度から<br />どう変わった？</h2></div>
+            <div><p class="section-number">02 / CHANGE</p><h2 id="changes-title">前年度から<br />どう変わった？</h2></div>
             <p>令和7年度当初予算と比べた増減です。増減額の大きい項目を機械的に抽出しており、増減の理由を示すものではありません。</p>
           </div>
           <div class="budget-comparison" aria-label="一般会計総額の前年度比較">
@@ -105,7 +122,7 @@
 
         <section id="revenue" class="account-section" aria-labelledby="revenue-title">
           <div class="account-section-heading">
-            <div><p class="section-number">02 / REVENUE</p><h2 id="revenue-title">お金はどこから来る？</h2></div>
+            <div><p class="section-number">03 / REVENUE</p><h2 id="revenue-title">お金はどこから来る？</h2></div>
             <p>市税、国や県からの支出金、市債など、一般会計に入るお金を24の「款」で分類しています。</p>
           </div>
 
@@ -139,7 +156,7 @@
 
         <section id="purpose" class="account-section" aria-labelledby="purpose-title">
           <div class="account-section-heading">
-            <div><p class="section-number">03 / PURPOSE</p><h2 id="purpose-title">何のために使う？</h2></div>
+            <div><p class="section-number">04 / PURPOSE</p><h2 id="purpose-title">何のために使う？</h2></div>
             <p>行政の目的に沿って見ると、健康福祉、こども、教育の3分野で一般会計の約半分を占めます。</p>
           </div>
           <div class="chart-panel chart-panel--wide">
@@ -158,7 +175,7 @@
 
         <section id="nature" class="account-section" aria-labelledby="nature-title">
           <div class="account-section-heading">
-            <div><p class="section-number">04 / NATURE</p><h2 id="nature-title">どんな性質の支出？</h2></div>
+            <div><p class="section-number">05 / NATURE</p><h2 id="nature-title">どんな性質の支出？</h2></div>
             <p>人件費や扶助費、道路・施設整備、日常的な行政運営など、支出の経済的な性質で見た分類です。</p>
           </div>
           <div id="nature-groups" class="nature-groups"></div>
@@ -167,7 +184,7 @@
 
         <section id="per-capita" class="account-section" aria-labelledby="per-capita-title">
           <div class="account-section-heading">
-            <div><p class="section-number">05 / PER PERSON</p><h2 id="per-capita-title">市民1人あたりで見ると？</h2></div>
+            <div><p class="section-number">06 / PER PERSON</p><h2 id="per-capita-title">市民1人あたりで見ると？</h2></div>
             <p>令和8年1月1日現在の推計人口1,559,207人を基に、市民1人あたりの使いみちへ換算した公式資料の分類です。</p>
           </div>
           <div class="per-capita-total"><span>歳出総額</span><strong id="per-capita-total">—</strong><small>市民1人あたり</small></div>
@@ -187,7 +204,7 @@
         </section>
 
         <section class="account-source" aria-labelledby="source-title">
-          <div><p class="section-number">06 / SOURCE</p><h2 id="source-title">出典と注意</h2></div>
+          <div><p class="section-number">07 / SOURCE</p><h2 id="source-title">出典と注意</h2></div>
           <div>
             <p>川崎市が2026年3月30日に公開した令和8年度当初予算の計数資料を基に、本サイトで表とグラフへ整理しました。金額は千円単位の原数値から換算しています。</p>
             <p class="caution">年度途中の補正予算は反映していません。正確な数値、最新の予算状況、用語の定義は川崎市の原資料をご確認ください。本サイトは川崎市とは無関係の非公式サイトです。</p>

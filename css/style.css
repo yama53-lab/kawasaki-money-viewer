@@ -1564,7 +1564,7 @@ footer p {
 
 .account-toc {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   margin: 1.25rem 0 clamp(4rem, 8vw, 7rem);
   border: 1px solid var(--line);
   background: var(--white);
@@ -1614,6 +1614,180 @@ footer p {
   max-width: 42rem;
   margin-bottom: 0;
   color: var(--muted);
+}
+
+.sankey-panel {
+  padding: 1rem;
+  border: 1px solid var(--line);
+  background: var(--white);
+  box-shadow: var(--shadow);
+}
+
+.sankey-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1.5rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.sankey-legend span {
+  display: inline-flex;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.sankey-key {
+  display: inline-block;
+  width: 1.4rem;
+  height: 0.55rem;
+}
+
+.sankey-key--revenue {
+  background: var(--teal);
+}
+
+.sankey-key--expense {
+  background: var(--yellow);
+}
+
+.sankey-instruction {
+  margin: 0.75rem 0 1rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.sankey-scroll {
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  border-block: 1px solid var(--line);
+  background: #fbfcfa;
+}
+
+.sankey-scroll:focus-visible {
+  outline: 3px solid rgba(0, 122, 133, 0.28);
+  outline-offset: 2px;
+}
+
+.account-sankey {
+  display: block;
+  width: 100%;
+  min-width: 940px;
+  height: auto;
+  font-family: var(--font-sans);
+}
+
+.sankey-heading-primary {
+  fill: var(--deep);
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.sankey-heading-secondary {
+  fill: var(--muted);
+  font-family: var(--font-numeric);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.sankey-link,
+.sankey-node {
+  transition: opacity 160ms ease;
+}
+
+.sankey-link {
+  pointer-events: all;
+}
+
+.sankey-link--revenue {
+  fill: rgba(0, 122, 133, 0.32);
+}
+
+.sankey-link--expense {
+  fill: rgba(245, 185, 45, 0.38);
+}
+
+.sankey-link:hover,
+.sankey-link.is-active {
+  opacity: 1;
+}
+
+.sankey-item.is-muted {
+  opacity: 0.13;
+}
+
+.sankey-node {
+  outline: none;
+}
+
+.sankey-node-hit {
+  fill: transparent;
+  pointer-events: all;
+}
+
+.sankey-node-bar {
+  shape-rendering: geometricPrecision;
+}
+
+.sankey-node--revenue .sankey-node-bar {
+  fill: var(--teal);
+}
+
+.sankey-node--expense .sankey-node-bar {
+  fill: #d89c0d;
+}
+
+.sankey-node--total .sankey-node-bar {
+  fill: var(--deep);
+}
+
+.sankey-node--other .sankey-node-bar {
+  fill-opacity: 0.68;
+}
+
+.sankey-node:focus-visible .sankey-node-bar,
+.sankey-node.is-active .sankey-node-bar {
+  stroke: var(--red);
+  stroke-width: 4px;
+}
+
+.sankey-node-name {
+  fill: var(--deep);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.sankey-node-value {
+  fill: var(--muted);
+  font-family: var(--font-numeric);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.sankey-detail {
+  display: grid;
+  grid-template-columns: minmax(7rem, auto) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: baseline;
+  min-height: 3.25rem;
+  padding: 0.9rem 1rem;
+  color: var(--deep);
+  background: var(--teal-soft);
+}
+
+.sankey-detail strong {
+  font-size: 0.78rem;
+}
+
+.sankey-detail span {
+  font-family: var(--font-numeric);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.sankey-panel .account-footnote {
+  margin-bottom: 0;
 }
 
 .budget-comparison {
@@ -2173,6 +2347,10 @@ footer p {
     border-left: 0;
   }
 
+  .account-toc a:nth-child(6) {
+    border-top: 1px solid var(--line);
+  }
+
   .budget-comparison {
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   }
@@ -2238,6 +2416,15 @@ footer p {
     border-left: 0;
   }
 
+  .sankey-panel {
+    padding-inline: 0.75rem;
+  }
+
+  .sankey-detail {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.25rem;
+  }
+
   .account-bar-list li > div:first-child {
     align-items: start;
     flex-direction: column;
@@ -2301,5 +2488,10 @@ footer p {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .sankey-link,
+  .sankey-node {
+    transition: none;
   }
 }

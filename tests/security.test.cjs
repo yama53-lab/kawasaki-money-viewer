@@ -146,6 +146,25 @@ test("both pages use the shared JSON loader", () => {
   assert.match(appSource, /const fetchJson = DataSecurity\.fetchJson/);
   assert.match(generalAccountSource, /DataSecurity\.fetchJson\(GENERAL_ACCOUNT_URL/);
 });
+const sankeyGroupStart = generalAccountSource.indexOf("function groupSankeyRows(");
+const sankeyGroupEnd = generalAccountSource.indexOf("function sankeyColumnLayout(", sankeyGroupStart);
+assert.ok(sankeyGroupStart >= 0 && sankeyGroupEnd > sankeyGroupStart);
+const sankeyContext = vm.createContext({});
+vm.runInContext(generalAccountSource.slice(sankeyGroupStart, sankeyGroupEnd), sankeyContext);
+test("Sankey grouping keeps totals and combines rows after the top seven", () => {
+  const rows = structuredClone(generalAccount.revenue);
+  const grouped = sankeyContext.groupSankeyRows(rows, "revenue");
+  assert.equal(grouped.length, 8);
+  assert.equal(grouped.at(-1).name, "その他（17項目）");
+  assert.equal(grouped.reduce((sum, row) => sum + row.value, 0), generalAccount.summary.current);
+  assert.deepEqual([...grouped.slice(0, 7)].map(row => row.value), [...grouped.slice(0, 7)].map(row => row.value).sort((a, b) => b - a));
+});
+test("general account page includes an accessible Sankey container", () => {
+  const html = fs.readFileSync(path.join(root, "general-account.html"), "utf8");
+  assert.match(html, /id="account-sankey"[^>]+role="img"/);
+  assert.match(html, /id="sankey-detail"[^>]+aria-live="polite"/);
+  assert.match(html, /特定の歳入が特定の歳出に充てられたことを示すものではありません/);
+});
 const barStart = appSource.indexOf("function createTrendBar(");
 const barEnd = appSource.indexOf("function renderTrendChart(", barStart);
 assert.ok(barStart >= 0 && barEnd > barStart);
