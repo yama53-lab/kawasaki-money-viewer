@@ -77,15 +77,35 @@
         </section>
 
         <nav class="account-toc" aria-label="一般会計ページ内メニュー">
+          <a href="#changes">前年度との比較<span>主な変化</span></a>
           <a href="#revenue">お金の入り口<span>歳入</span></a>
           <a href="#purpose">何に使うか<span>目的別歳出</span></a>
           <a href="#nature">どんな支出か<span>性質別歳出</span></a>
           <a href="#per-capita">1人あたり<span>使いみち</span></a>
         </nav>
 
+        <section id="changes" class="account-section" aria-labelledby="changes-title">
+          <div class="account-section-heading">
+            <div><p class="section-number">01 / CHANGE</p><h2 id="changes-title">前年度から<br />どう変わった？</h2></div>
+            <p>令和7年度当初予算と比べた増減です。増減額の大きい項目を機械的に抽出しており、増減の理由を示すものではありません。</p>
+          </div>
+          <div class="budget-comparison" aria-label="一般会計総額の前年度比較">
+            <div><span>令和7年度</span><strong id="comparison-previous">—</strong></div>
+            <span class="comparison-arrow" aria-hidden="true">→</span>
+            <div><span>令和8年度</span><strong id="comparison-current">—</strong></div>
+            <p><strong id="comparison-difference">—</strong><span id="comparison-rate">—</span></p>
+          </div>
+          <div class="change-ranking-grid">
+            <article><p class="section-number">歳入</p><h3>入り口の主な変化</h3><ol id="revenue-changes" class="change-ranking"></ol></article>
+            <article><p class="section-number">目的別歳出</p><h3>使いみちの主な変化</h3><ol id="purpose-changes" class="change-ranking"></ol></article>
+            <article><p class="section-number">性質別歳出</p><h3>支出性質の主な変化</h3><ol id="nature-changes" class="change-ranking"></ol></article>
+          </div>
+          <p class="account-footnote">各区分で前年度との差の絶対額が大きい順に3項目を表示しています。背景や個別事業は川崎市の原資料をご確認ください。</p>
+        </section>
+
         <section id="revenue" class="account-section" aria-labelledby="revenue-title">
           <div class="account-section-heading">
-            <div><p class="section-number">01 / REVENUE</p><h2 id="revenue-title">お金はどこから来る？</h2></div>
+            <div><p class="section-number">02 / REVENUE</p><h2 id="revenue-title">お金はどこから来る？</h2></div>
             <p>市税、国や県からの支出金、市債など、一般会計に入るお金を24の「款」で分類しています。</p>
           </div>
 
@@ -119,7 +139,7 @@
 
         <section id="purpose" class="account-section" aria-labelledby="purpose-title">
           <div class="account-section-heading">
-            <div><p class="section-number">02 / PURPOSE</p><h2 id="purpose-title">何のために使う？</h2></div>
+            <div><p class="section-number">03 / PURPOSE</p><h2 id="purpose-title">何のために使う？</h2></div>
             <p>行政の目的に沿って見ると、健康福祉、こども、教育の3分野で一般会計の約半分を占めます。</p>
           </div>
           <div class="chart-panel chart-panel--wide">
@@ -138,7 +158,7 @@
 
         <section id="nature" class="account-section" aria-labelledby="nature-title">
           <div class="account-section-heading">
-            <div><p class="section-number">03 / NATURE</p><h2 id="nature-title">どんな性質の支出？</h2></div>
+            <div><p class="section-number">04 / NATURE</p><h2 id="nature-title">どんな性質の支出？</h2></div>
             <p>人件費や扶助費、道路・施設整備、日常的な行政運営など、支出の経済的な性質で見た分類です。</p>
           </div>
           <div id="nature-groups" class="nature-groups"></div>
@@ -147,7 +167,7 @@
 
         <section id="per-capita" class="account-section" aria-labelledby="per-capita-title">
           <div class="account-section-heading">
-            <div><p class="section-number">04 / PER PERSON</p><h2 id="per-capita-title">市民1人あたりで見ると？</h2></div>
+            <div><p class="section-number">05 / PER PERSON</p><h2 id="per-capita-title">市民1人あたりで見ると？</h2></div>
             <p>令和8年1月1日現在の推計人口1,559,207人を基に、市民1人あたりの使いみちへ換算した公式資料の分類です。</p>
           </div>
           <div class="per-capita-total"><span>歳出総額</span><strong id="per-capita-total">—</strong><small>市民1人あたり</small></div>
@@ -167,7 +187,7 @@
         </section>
 
         <section class="account-source" aria-labelledby="source-title">
-          <div><p class="section-number">05 / SOURCE</p><h2 id="source-title">出典と注意</h2></div>
+          <div><p class="section-number">06 / SOURCE</p><h2 id="source-title">出典と注意</h2></div>
           <div>
             <p>川崎市が2026年3月30日に公開した令和8年度当初予算の計数資料を基に、本サイトで表とグラフへ整理しました。金額は千円単位の原数値から換算しています。</p>
             <p class="caution">年度途中の補正予算は反映していません。正確な数値、最新の予算状況、用語の定義は川崎市の原資料をご確認ください。本サイトは川崎市とは無関係の非公式サイトです。</p>

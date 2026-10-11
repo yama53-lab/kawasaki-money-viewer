@@ -1564,7 +1564,7 @@ footer p {
 
 .account-toc {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   margin: 1.25rem 0 clamp(4rem, 8vw, 7rem);
   border: 1px solid var(--line);
   background: var(--white);
@@ -1614,6 +1614,102 @@ footer p {
   max-width: 42rem;
   margin-bottom: 0;
   color: var(--muted);
+}
+
+.budget-comparison {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) minmax(12rem, 0.75fr);
+  gap: clamp(1rem, 3vw, 2.5rem);
+  align-items: center;
+  padding: clamp(1.4rem, 3vw, 2.25rem);
+  color: #fff;
+  background: var(--deep);
+  box-shadow: var(--shadow);
+}
+
+.budget-comparison > div span,
+.budget-comparison > p span {
+  display: block;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.78rem;
+}
+
+.budget-comparison > div strong,
+.budget-comparison > p strong {
+  display: block;
+  margin-top: 0.3rem;
+  font-family: var(--font-numeric);
+  font-size: clamp(1.35rem, 2.5vw, 2rem);
+  line-height: 1.15;
+}
+
+.budget-comparison > p {
+  margin: 0;
+  padding-left: clamp(1rem, 2vw, 2rem);
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.budget-comparison .comparison-arrow {
+  color: var(--yellow);
+  font-size: 1.5rem;
+}
+
+.budget-comparison .change-up {
+  color: #ffd683;
+}
+
+.budget-comparison .change-down {
+  color: #a9e2ed;
+}
+
+.change-ranking-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  margin-top: 1.2rem;
+}
+
+.change-ranking-grid article {
+  padding: clamp(1.25rem, 3vw, 1.8rem);
+  border: 1px solid var(--line);
+  background: var(--white);
+}
+
+.change-ranking-grid h3 {
+  margin: 0 0 1rem;
+  color: var(--deep);
+  font-size: 1.05rem;
+}
+
+.change-ranking {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.change-ranking li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.1rem 0.75rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.change-ranking span {
+  color: var(--deep);
+  font-weight: 700;
+}
+
+.change-ranking strong,
+.change-ranking small {
+  font-family: var(--font-numeric);
+  text-align: right;
+}
+
+.change-ranking small {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 0.72rem;
 }
 
 .account-feature-grid {
@@ -2024,8 +2120,13 @@ footer p {
   }
 
   .nature-groups,
-  .per-capita-list {
+  .per-capita-list,
+  .change-ranking-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .change-ranking-grid article:last-child {
+    grid-column: 1 / -1;
   }
 }
 
@@ -2066,6 +2167,22 @@ footer p {
   .account-toc a:nth-child(4) {
     border-top: 1px solid var(--line);
   }
+
+  .account-toc a:nth-child(5) {
+    border-top: 1px solid var(--line);
+    border-left: 0;
+  }
+
+  .budget-comparison {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  }
+
+  .budget-comparison > p {
+    grid-column: 1 / -1;
+    padding: 1rem 0 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-left: 0;
+  }
 }
 
 @media (max-width: 600px) {
@@ -2102,8 +2219,13 @@ footer p {
   .account-toc,
   .account-bar-list--wide,
   .nature-groups,
-  .per-capita-list {
+  .per-capita-list,
+  .change-ranking-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .change-ranking-grid article:last-child {
+    grid-column: auto;
   }
 
   .account-summary article + article {

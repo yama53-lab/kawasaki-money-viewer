@@ -135,6 +135,40 @@ function renderResourceSplit(data) {
   document.querySelector("#dependent-amount").textContent = readableAmount(data.summary.dependent);
 }
 
+function renderChangeRanking(rows, target) {
+  const selected = [...rows]
+    .sort((a, b) => Math.abs(b.current - b.previous) - Math.abs(a.current - a.previous))
+    .slice(0, 3);
+  const fragment = document.createDocumentFragment();
+  selected.forEach((item) => {
+    const difference = item.current - item.previous;
+    const row = document.createElement("li");
+    const name = document.createElement("span");
+    name.textContent = item.name;
+    const amount = document.createElement("strong");
+    amount.className = difference > 0 ? "change-up" : difference < 0 ? "change-down" : "change-same";
+    amount.textContent = `${difference > 0 ? "+" : ""}${readableAmount(difference)}`;
+    const rate = document.createElement("small");
+    rate.textContent = `前年度比 ${changeRate(item.current, item.previous)}`;
+    row.append(name, amount, rate);
+    fragment.append(row);
+  });
+  target.replaceChildren(fragment);
+}
+
+function renderChanges(data) {
+  const difference = data.summary.current - data.summary.previous;
+  document.querySelector("#comparison-previous").textContent = readableAmount(data.summary.previous);
+  document.querySelector("#comparison-current").textContent = readableAmount(data.summary.current);
+  const differenceNode = document.querySelector("#comparison-difference");
+  differenceNode.textContent = `${difference > 0 ? "+" : ""}${readableAmount(difference)}`;
+  differenceNode.className = difference > 0 ? "change-up" : difference < 0 ? "change-down" : "change-same";
+  document.querySelector("#comparison-rate").textContent = `前年度比 ${changeRate(data.summary.current, data.summary.previous)}`;
+  renderChangeRanking(data.revenue, document.querySelector("#revenue-changes"));
+  renderChangeRanking(data.expenditurePurpose, document.querySelector("#purpose-changes"));
+  renderChangeRanking(data.expenditureNature, document.querySelector("#nature-changes"));
+}
+
 function renderNature(data) {
   const container = document.querySelector("#nature-groups");
   const fragment = document.createDocumentFragment();
@@ -198,6 +232,7 @@ function renderGeneralAccount(data) {
   document.querySelector("#account-population").textContent = `推計人口 ${integerFormat.format(data.summary.population)}人で算出`;
   document.querySelector("#account-autonomous-share").textContent = percent(data.summary.autonomous, total);
 
+  renderChanges(data);
   renderResourceSplit(data);
   renderBars(data.revenue, document.querySelector("#revenue-chart"), total, 8);
   renderTable(data.revenue, document.querySelector("#revenue-body"), total);
