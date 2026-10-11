@@ -51,6 +51,43 @@ const DataSecurity = (() => {
     return value;
   }
 
+  async function fetchJson(relativePath, maximumBytes) {
+    check(text(relativePath, true, 2048) && Number.isSafeInteger(maximumBytes) && maximumBytes > 0, "データ取得条件");
+    const url = new URL(relativePath, document.baseURI);
+    check(url.origin === location.origin && ["http:", "https:"].includes(url.protocol), "同一サイト以外のデータ取得");
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 20000);
+    try {
+      const response = await fetch(url, { signal: controller.signal, redirect: "error", mode: "same-origin", credentials: "omit" });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      check(response.headers.get("content-type")?.split(";")[0].trim() === "application/json", "JSON以外の応答");
+      check(Number(response.headers.get("content-length")) <= maximumBytes, "データ容量");
+      const reader = response.body.getReader();
+      const chunks = [];
+      let length = 0;
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        length += value.byteLength;
+        if (length > maximumBytes) {
+          await reader.cancel();
+          throw new Error("データの容量が大きすぎます");
+        }
+        chunks.push(value);
+      }
+      const bytes = new Uint8Array(length);
+      let offset = 0;
+      for (const chunk of chunks) {
+        bytes.set(chunk, offset);
+        offset += chunk.byteLength;
+      }
+      return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
+    } finally {
+      clearTimeout(timeout);
+      controller.abort();
+    }
+  }
+
   function validateMetadata(value) {
     check(record(value), "資料の構造");
     check(value.type === "budget" || value.type === "settlement", "資料種別");
@@ -211,7 +248,7 @@ const DataSecurity = (() => {
     return value;
   }
 
-  return Object.freeze({ sourcePdfUrl, sourcePageUrl, datasetFile, validateIndex, validateDataset, validateTrends, validateGeneralAccount });
+  return Object.freeze({ sourcePdfUrl, sourcePageUrl, datasetFile, fetchJson, validateIndex, validateDataset, validateTrends, validateGeneralAccount });
 })();
 
 if (typeof module !== "undefined" && module.exports) module.exports = DataSecurity;

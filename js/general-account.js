@@ -4,40 +4,7 @@ const integerFormat = new Intl.NumberFormat("ja-JP");
 const decimalFormat = new Intl.NumberFormat("ja-JP", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
 async function fetchGeneralAccount() {
-  const url = new URL(GENERAL_ACCOUNT_URL, document.baseURI);
-  if (url.origin !== location.origin || !["http:", "https:"].includes(url.protocol)) throw new Error("同一サイト以外のデータは読み込めません");
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 20000);
-  try {
-    const response = await fetch(url, { signal: controller.signal, redirect: "error", mode: "same-origin", credentials: "omit" });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    if (response.headers.get("content-type")?.split(";")[0].trim() !== "application/json") throw new Error("JSON以外の応答です");
-    const maximumBytes = 512 * 1024;
-    if (Number(response.headers.get("content-length")) > maximumBytes) throw new Error("データの容量が大きすぎます");
-    const reader = response.body.getReader();
-    const chunks = [];
-    let length = 0;
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      length += value.byteLength;
-      if (length > maximumBytes) {
-        await reader.cancel();
-        throw new Error("データの容量が大きすぎます");
-      }
-      chunks.push(value);
-    }
-    const bytes = new Uint8Array(length);
-    let offset = 0;
-    for (const chunk of chunks) {
-      bytes.set(chunk, offset);
-      offset += chunk.byteLength;
-    }
-    return DataSecurity.validateGeneralAccount(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)));
-  } finally {
-    clearTimeout(timeout);
-    controller.abort();
-  }
+  return DataSecurity.validateGeneralAccount(await DataSecurity.fetchJson(GENERAL_ACCOUNT_URL, 512 * 1024));
 }
 
 function readableAmount(value) {
@@ -250,15 +217,17 @@ function renderGeneralAccount(data) {
 }
 
 async function initializeGeneralAccount() {
+  const content = document.querySelector("#account-content");
   try {
     const data = await fetchGeneralAccount();
     renderGeneralAccount(data);
     document.querySelector("#account-status").hidden = true;
-    document.querySelector("#account-content").hidden = false;
+    content.setAttribute("aria-busy", "false");
   } catch (error) {
     console.error(error);
-    document.querySelector("#account-status").hidden = true;
+    document.querySelector("#account-status").textContent = "データを読み込めませんでした";
     document.querySelector("#account-error").hidden = false;
+    content.setAttribute("aria-busy", "false");
   }
 }
 

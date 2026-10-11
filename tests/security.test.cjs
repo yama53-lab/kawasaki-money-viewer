@@ -38,6 +38,40 @@ for (const file of ["../js/app.js", "../marker.json", "/budget/R6.json", "https:
   test(`reject unsafe filename: ${file}`, () => assert.throws(() => security.datasetFile(file)));
 }
 
+test("shared JSON loader reads same-origin data", async () => {
+  const originals = { document: globalThis.document, location: globalThis.location, fetch: globalThis.fetch };
+  const bytes = new TextEncoder().encode('{"ok":true}');
+  globalThis.document = { baseURI: "https://viewer.example/general-account.html" };
+  globalThis.location = { origin: "https://viewer.example" };
+  globalThis.fetch = async () => ({
+    ok: true,
+    headers: { get: name => name === "content-type" ? "application/json; charset=utf-8" : String(bytes.byteLength) },
+    body: { getReader: () => {
+      let sent = false;
+      return { read: async () => sent ? { done: true } : (sent = true, { done: false, value: bytes }) };
+    } },
+  });
+  try {
+    assert.deepEqual(await security.fetchJson("data/example.json", 1024), { ok: true });
+  } finally {
+    Object.assign(globalThis, originals);
+  }
+});
+
+test("shared JSON loader rejects local file URLs before fetch", async () => {
+  const originals = { document: globalThis.document, location: globalThis.location, fetch: globalThis.fetch };
+  let requested = false;
+  globalThis.document = { baseURI: "file:///tmp/index.html" };
+  globalThis.location = { origin: "null" };
+  globalThis.fetch = async () => { requested = true; };
+  try {
+    await assert.rejects(security.fetchJson("data/example.json", 1024));
+    assert.equal(requested, false);
+  } finally {
+    Object.assign(globalThis, originals);
+  }
+});
+
 const datasetCases = {
   "numeric string": value => { value.items[0].current = "100"; },
   "infinite amount": value => { value.items[0].current = Infinity; },
@@ -107,6 +141,11 @@ test("reject inherited property-like trend keys and excessive points", () => {
 // Exercise the actual bar builder without starting the page or fetching data.
 const vm = require("node:vm");
 const appSource = fs.readFileSync(path.join(root, "js/app.js"), "utf8");
+const generalAccountSource = fs.readFileSync(path.join(root, "js/general-account.js"), "utf8");
+test("both pages use the shared JSON loader", () => {
+  assert.match(appSource, /const fetchJson = DataSecurity\.fetchJson/);
+  assert.match(generalAccountSource, /DataSecurity\.fetchJson\(GENERAL_ACCOUNT_URL/);
+});
 const barStart = appSource.indexOf("function createTrendBar(");
 const barEnd = appSource.indexOf("function renderTrendChart(", barStart);
 assert.ok(barStart >= 0 && barEnd > barStart);

@@ -43,38 +43,7 @@ const elements = {
 
 let trendIndexPromise = null;
 
-async function fetchJson(relativePath, maximumBytes) {
-  const url = new URL(relativePath, document.baseURI);
-  if (url.origin !== location.origin || !["http:", "https:"].includes(url.protocol)) throw new Error("同一サイト以外のデータは読み込めません");
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 20000);
-  try {
-    const response = await fetch(url, { signal: controller.signal, redirect: "error", mode: "same-origin", credentials: "omit" });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    if (response.headers.get("content-type")?.split(";")[0].trim() !== "application/json") throw new Error("JSON以外の応答です");
-    if (Number(response.headers.get("content-length")) > maximumBytes) throw new Error("データの容量が大きすぎます");
-    const reader = response.body.getReader();
-    const chunks = [];
-    let length = 0;
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      length += value.byteLength;
-      if (length > maximumBytes) {
-        await reader.cancel();
-        throw new Error("データの容量が大きすぎます");
-      }
-      chunks.push(value);
-    }
-    const bytes = new Uint8Array(length);
-    let offset = 0;
-    for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
-    return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
-  } finally {
-    clearTimeout(timeout);
-    controller.abort();
-  }
-}
+const fetchJson = DataSecurity.fetchJson;
 
 function setSourceLink(link, value) {
   link.href = DataSecurity.sourcePdfUrl(value);
