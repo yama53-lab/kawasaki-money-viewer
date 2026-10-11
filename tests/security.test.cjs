@@ -78,3 +78,56 @@ test("reject inherited property-like trend keys and excessive points", () => {
   const large = structuredClone(trends); Object.values(large.series)[0].points = Array(201).fill({});
   assert.throws(() => security.validateTrends(large));
 });
+
+// Exercise the actual bar builder without starting the page or fetching data.
+const vm = require("node:vm");
+const appSource = fs.readFileSync(path.join(root, "js/app.js"), "utf8");
+const barStart = appSource.indexOf("function createTrendBar(");
+const barEnd = appSource.indexOf("function renderTrendChart(", barStart);
+assert.ok(barStart >= 0 && barEnd > barStart);
+const makeElement = tagName => {
+  const element = {
+    tagName, className: "", style: {}, attributes: {}, children: [], listeners: {},
+    setAttribute(name, value) { this.attributes[name] = value; },
+    append(...children) { this.children.push(...children); },
+    addEventListener(name, handler) { this.listeners[name] = handler; },
+  };
+  element.classList = { add(name) { element.className += ` ${name}`; } };
+  return element;
+};
+const barContext = vm.createContext({
+  document: { createElement: makeElement },
+  displayTrendYear: () => "R2",
+  formatReadableAmount: value => `${value * 1000}円`,
+  formatSourceAmount: value => `${value}千円`,
+});
+vm.runInContext(appSource.slice(barStart, barEnd), barContext);
+for (const type of ["budget", "settlement"]) {
+  test(`${type} zero uses a neutral label and keeps the tooltip`, () => {
+    const bar = barContext.createTrendBar({ [type]: 0 }, type, 2000);
+    assert.equal(bar.tagName, "button");
+    assert.ok(bar.className.includes("trend-bar--zero"));
+    assert.equal(bar.style.height, undefined);
+    assert.equal(bar.children[0].textContent, "0");
+    assert.equal(bar.children[0].attributes["aria-hidden"], "true");
+    assert.ok(bar.attributes["aria-label"].includes("0円"));
+    assert.equal(bar.children[1].className, "trend-tooltip");
+    assert.equal(bar.children[1].children[1].textContent, "0円");
+    assert.equal(bar.children[1].children[2].textContent, "原資料：0千円");
+    assert.equal(typeof bar.listeners.pointerenter, "function");
+    assert.equal(typeof bar.listeners.focus, "function");
+  });
+  test(`${type} positive amounts retain their colored bar`, () => {
+    const bar = barContext.createTrendBar({ [type]: 500 }, type, 2000);
+    assert.ok(!bar.className.includes("trend-bar--zero"));
+    assert.equal(bar.style.height, "25%");
+    assert.equal(bar.children[0].className, "trend-tooltip");
+  });
+  test(`${type} missing amounts are distinct from zero`, () => {
+    const bar = barContext.createTrendBar({ [type]: null }, type, 2000);
+    assert.equal(bar.tagName, "span");
+    assert.equal(bar.className, "trend-bar-missing");
+    assert.ok(bar.attributes["aria-label"].includes("データなし"));
+    assert.equal(bar.children.length, 0);
+  });
+}

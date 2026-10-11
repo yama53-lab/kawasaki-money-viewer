@@ -210,7 +210,16 @@ function createTrendBar(point, type, maximum) {
   const bar = document.createElement("button");
   bar.type = "button";
   bar.className = `trend-bar trend-bar--${type}`;
-  bar.style.height = `${Math.max((value / maximum) * 100, value > 0 ? 0.8 : 0)}%`;
+  if (value === 0) {
+    bar.classList.add("trend-bar--zero");
+    const zero = document.createElement("span");
+    zero.className = "trend-zero-label";
+    zero.textContent = "0";
+    zero.setAttribute("aria-hidden", "true");
+    bar.append(zero);
+  } else {
+    bar.style.height = `${Math.max((value / maximum) * 100, 0.8)}%`;
+  }
   bar.setAttribute(
     "aria-label",
     `${displayTrendYear(point)} ${label} ${formatReadableAmount(value)}、原資料 ${formatSourceAmount(value)}`,
