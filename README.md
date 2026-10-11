@@ -6,6 +6,12 @@
 
 公開予定URL：<https://yama53-lab.github.io/kawasaki-money-viewer/>
 
+## ローカルで確認する
+
+Finderから `start-local-preview.command` をダブルクリックすると、ローカル確認用サーバーが起動し、一般会計ページがブラウザで開きます。
+
+詳しい操作、終了方法、エラー時の対処は[ローカル確認の手順](LOCAL_PREVIEW.md)をご覧ください。HTMLファイルを直接開く `file://` ではJSONデータを読み込めないため、必ずこの手順で確認してください。
+
 ## 収録データ
 
 - 予算：令和8年度〜平成19年度（20年度分）
