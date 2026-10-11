@@ -843,6 +843,16 @@ async function init() {
   clearDatasetDisplay();
   try {
     state.index = DataSecurity.validateIndex(await fetchJson(INDEX_URL, 1024 * 1024));
+    const requested = new URLSearchParams(location.search);
+    const requestedType = requested.get("type");
+    const requestedYear = requested.get("year");
+    if (["budget", "settlement", "comparison"].includes(requestedType)) state.type = requestedType;
+    const requestedDatasets = availableDatasets();
+    if (requestedDatasets.some((dataset) => dataset.year === requestedYear)) {
+      state.year = requestedYear;
+    } else {
+      state.year = requestedDatasets[0]?.year || state.year;
+    }
     elements.typeButtons.forEach((button) => { button.disabled = button.dataset.type === "comparison" && comparisonDatasets().length === 0; });
     populateYears();
     await loadDataset();

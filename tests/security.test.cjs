@@ -9,12 +9,20 @@ const index = read("data/index.json");
 const dataset = read("data/settlement/R6.json");
 const manifest = index.datasets.find(item => item.type === "settlement" && item.year === "R6");
 const trends = read("data/trends.json");
+const generalAccount = read("data/general-account/R8.json");
 
 test("all actual datasets and graph series pass validation", () => {
   security.validateIndex(index);
   for (const item of index.datasets) security.validateDataset(read(`data/${item.file}`), item);
   security.validateTrends(trends);
+  security.validateGeneralAccount(generalAccount);
 });
+
+for (const url of ["https://example.invalid/230/page/0000186101.html", "http://www.city.kawasaki.jp/230/page/0000186101.html",
+  "https://www.city.kawasaki.jp.evil.invalid/230/page/0000186101.html", "https://www.city.kawasaki.jp/230/page/../secret.html",
+  "https://www.city.kawasaki.jp/230/page/0000186101.html?x=1"]) {
+  test(`reject unsafe source page: ${url}`, () => assert.throws(() => security.sourcePageUrl(url)));
+}
 
 for (const url of ["https://example.invalid/R6.pdf", "javascript:alert(1)", "data:text/html,test", "file:///R6.pdf",
   "http://www.city.kawasaki.jp/230/cmsfiles/contents/R6.pdf", "https://www.city.kawasaki.jp.evil.invalid/230/cmsfiles/contents/R6.pdf",
@@ -72,6 +80,23 @@ test("reject bad trend numbers and unsorted years", () => {
   const duplicate = structuredClone(trends); const series = Object.values(duplicate.series)[0]; series.points.push(series.points[0]);
   assert.throws(() => security.validateTrends(duplicate));
 });
+
+const generalAccountCases = {
+  "wrong total": value => { value.summary.current++; },
+  "unsafe source page": value => { value.sourcePageUrl = "https://example.invalid/source"; },
+  "unsafe source PDF": value => { value.sourceUrl = "https://example.invalid/source.pdf"; },
+  "revenue mismatch": value => { value.revenue[0].current++; },
+  "purpose resource mismatch": value => { value.expenditurePurpose[0].generalResources++; },
+  "nature child mismatch": value => { value.expenditureNature[0].items[0].current++; },
+  "per-capita mismatch": value => { value.perCapita[0].yen++; },
+  "numeric string": value => { value.summary.population = "1559207"; },
+};
+for (const [label, modify] of Object.entries(generalAccountCases)) {
+  test(`reject general account data with ${label}`, () => {
+    const value = structuredClone(generalAccount); modify(value);
+    assert.throws(() => security.validateGeneralAccount(value));
+  });
+}
 test("reject inherited property-like trend keys and excessive points", () => {
   const bad = structuredClone(trends); bad.series.constructor = { name: "constructor", points: [] };
   assert.throws(() => security.validateTrends(bad));

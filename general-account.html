@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="川崎市の令和8年度一般会計当初予算を、歳入・目的別歳出・性質別歳出・市民1人あたりの使いみちから読み解く非公式ビューアです。" />
+    <meta name="theme-color" content="#063b4c" />
+    <title>一般会計｜かわさき Money Viewer</title>
+    <link rel="icon" type="image/svg+xml" href="assets/brand-coin.svg" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/data-validation.js" defer></script>
+    <script src="js/general-account.js" defer></script>
+  </head>
+  <body class="general-account-page">
+    <a class="skip-link" href="#content">本文へ移動</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="./" aria-label="かわさき Money Viewer トップ">
+          <img class="brand-mark" src="assets/brand-coin.svg" alt="" aria-hidden="true" />
+          <span><strong>かわさき Money Viewer</strong><small>川崎市のお金を見つける</small></span>
+        </a>
+        <div class="header-actions">
+          <nav class="site-nav" aria-label="主なコンテンツ">
+            <a href="./">補助・助成金</a>
+            <a href="general-account.html" aria-current="page">一般会計</a>
+          </nav>
+          <a class="source-link source-link--header" href="https://www.city.kawasaki.jp/230/page/0000186101.html" target="_blank" rel="noopener noreferrer">
+            川崎市の原資料 <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main id="content">
+      <section class="account-hero" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">令和8年度 / 当初予算</p>
+          <h1 id="page-title">川崎市の一般会計を、<br />大きな流れから見る。</h1>
+        </div>
+        <div class="account-hero-copy">
+          <p>福祉、子育て、教育、まちづくりなど、市の基本的な行政サービスに使うお金を「どこから集め、何に使うか」で整理しました。</p>
+          <p class="stage-note"><strong>当初予算</strong>　年度開始時点の予算です。年度途中の補正予算は含みません。</p>
+        </div>
+      </section>
+
+      <div id="account-status" class="account-status" role="status">一般会計データを読み込んでいます…</div>
+      <div id="account-error" class="account-error" role="alert" hidden>
+        <strong>一般会計データを読み込めませんでした。</strong>
+        <p>時間をおいて再度お試しいただくか、川崎市の原資料をご確認ください。</p>
+      </div>
+
+      <div id="account-content" hidden>
+        <section class="account-summary" aria-label="一般会計の概要">
+          <article>
+            <span>一般会計総額</span>
+            <strong id="account-total">—</strong>
+            <small id="account-total-source">—</small>
+          </article>
+          <article>
+            <span>前年度からの増減</span>
+            <strong id="account-change">—</strong>
+            <small id="account-change-rate">—</small>
+          </article>
+          <article>
+            <span>市民1人あたり</span>
+            <strong id="account-per-capita">—</strong>
+            <small id="account-population">—</small>
+          </article>
+          <article>
+            <span>自主財源の割合</span>
+            <strong id="account-autonomous-share">—</strong>
+            <small>市税など、市が自主的に確保する収入</small>
+          </article>
+        </section>
+
+        <nav class="account-toc" aria-label="一般会計ページ内メニュー">
+          <a href="#revenue">お金の入り口<span>歳入</span></a>
+          <a href="#purpose">何に使うか<span>目的別歳出</span></a>
+          <a href="#nature">どんな支出か<span>性質別歳出</span></a>
+          <a href="#per-capita">1人あたり<span>使いみち</span></a>
+        </nav>
+
+        <section id="revenue" class="account-section" aria-labelledby="revenue-title">
+          <div class="account-section-heading">
+            <div><p class="section-number">01 / REVENUE</p><h2 id="revenue-title">お金はどこから来る？</h2></div>
+            <p>市税、国や県からの支出金、市債など、一般会計に入るお金を24の「款」で分類しています。</p>
+          </div>
+
+          <div class="account-feature-grid">
+            <article class="resource-panel" aria-labelledby="resource-title">
+              <p class="section-number">財源の構成</p>
+              <h3 id="resource-title">自主財源と依存財源</h3>
+              <div id="resource-split" class="resource-split" aria-label="自主財源と依存財源の構成比"></div>
+              <dl class="resource-facts">
+                <div><dt><i class="resource-dot resource-dot--own"></i>自主財源</dt><dd id="autonomous-amount">—</dd></div>
+                <div><dt><i class="resource-dot resource-dot--dependent"></i>依存財源</dt><dd id="dependent-amount">—</dd></div>
+              </dl>
+            </article>
+            <article class="chart-panel" aria-labelledby="revenue-chart-title">
+              <p class="section-number">構成比の大きい順</p>
+              <h3 id="revenue-chart-title">主な歳入</h3>
+              <ol id="revenue-chart" class="account-bar-list"></ol>
+            </article>
+          </div>
+
+          <details class="account-details">
+            <summary>歳入24項目の詳しい表を見る</summary>
+            <div class="account-table-wrap" tabindex="0" aria-label="一般会計歳入予算一覧。横にスクロールできます">
+              <table class="account-table">
+                <thead><tr><th scope="col">歳入</th><th scope="col" class="number-cell">令和8年度</th><th scope="col" class="number-cell">構成比</th><th scope="col" class="number-cell">令和7年度</th><th scope="col" class="number-cell">増減</th></tr></thead>
+                <tbody id="revenue-body"></tbody>
+              </table>
+            </div>
+          </details>
+        </section>
+
+        <section id="purpose" class="account-section" aria-labelledby="purpose-title">
+          <div class="account-section-heading">
+            <div><p class="section-number">02 / PURPOSE</p><h2 id="purpose-title">何のために使う？</h2></div>
+            <p>行政の目的に沿って見ると、健康福祉、こども、教育の3分野で一般会計の約半分を占めます。</p>
+          </div>
+          <div class="chart-panel chart-panel--wide">
+            <ol id="purpose-chart" class="account-bar-list account-bar-list--wide"></ol>
+          </div>
+          <details class="account-details">
+            <summary>目的別歳出16項目の詳しい表を見る</summary>
+            <div class="account-table-wrap" tabindex="0" aria-label="一般会計目的別歳出予算一覧。横にスクロールできます">
+              <table class="account-table">
+                <thead><tr><th scope="col">目的</th><th scope="col" class="number-cell">令和8年度</th><th scope="col" class="number-cell">構成比</th><th scope="col" class="number-cell">令和7年度</th><th scope="col" class="number-cell">増減</th></tr></thead>
+                <tbody id="purpose-body"></tbody>
+              </table>
+            </div>
+          </details>
+        </section>
+
+        <section id="nature" class="account-section" aria-labelledby="nature-title">
+          <div class="account-section-heading">
+            <div><p class="section-number">03 / NATURE</p><h2 id="nature-title">どんな性質の支出？</h2></div>
+            <p>人件費や扶助費、道路・施設整備、日常的な行政運営など、支出の経済的な性質で見た分類です。</p>
+          </div>
+          <div id="nature-groups" class="nature-groups"></div>
+          <p class="account-footnote">「補助費等」は地方財政上の性質別区分で、現在の補助・助成金一覧と対象範囲が一致するものではありません。</p>
+        </section>
+
+        <section id="per-capita" class="account-section" aria-labelledby="per-capita-title">
+          <div class="account-section-heading">
+            <div><p class="section-number">04 / PER PERSON</p><h2 id="per-capita-title">市民1人あたりで見ると？</h2></div>
+            <p>令和8年1月1日現在の推計人口1,559,207人を基に、市民1人あたりの使いみちへ換算した公式資料の分類です。</p>
+          </div>
+          <div class="per-capita-total"><span>歳出総額</span><strong id="per-capita-total">—</strong><small>市民1人あたり</small></div>
+          <ol id="per-capita-list" class="per-capita-list"></ol>
+        </section>
+
+        <section class="subsidy-context" aria-labelledby="subsidy-context-title">
+          <div>
+            <p class="section-number">補助・助成金との関係</p>
+            <h2 id="subsidy-context-title">一般会計の中で見る</h2>
+          </div>
+          <div>
+            <p>令和8年度の補助・助成金一覧から一般会計分を集計すると、<strong id="subsidy-total">—</strong>、一般会計当初予算の<strong id="subsidy-share">—</strong>です。</p>
+            <p class="account-footnote">この比率は本サイトの補助・助成金データを一般会計区分で集計した参考値です。性質別歳出の「補助費等」とは定義が異なります。</p>
+            <a class="secondary-button account-link-button" href="./?type=budget&amp;year=R8">令和8年度の補助・助成金を見る</a>
+          </div>
+        </section>
+
+        <section class="account-source" aria-labelledby="source-title">
+          <div><p class="section-number">05 / SOURCE</p><h2 id="source-title">出典と注意</h2></div>
+          <div>
+            <p>川崎市が2026年3月30日に公開した令和8年度当初予算の計数資料を基に、本サイトで表とグラフへ整理しました。金額は千円単位の原数値から換算しています。</p>
+            <p class="caution">年度途中の補正予算は反映していません。正確な数値、最新の予算状況、用語の定義は川崎市の原資料をご確認ください。本サイトは川崎市とは無関係の非公式サイトです。</p>
+            <div class="source-links">
+              <a id="account-source-page" class="source-link" href="https://www.city.kawasaki.jp/230/page/0000186101.html" target="_blank" rel="noopener noreferrer">川崎市「令和8年度予算について」 <span aria-hidden="true">↗</span></a>
+              <a id="account-source-pdf" class="source-link" href="https://www.city.kawasaki.jp/230/cmsfiles/contents/0000186/186101/26bunkatuban6_antore.pdf" target="_blank" rel="noopener noreferrer">計数資料PDF <span aria-hidden="true">↗</span></a>
+            </div>
+            <dl class="account-source-meta"><div><dt>対象</dt><dd id="account-source-label">—</dd></div><div><dt>データ更新</dt><dd id="account-updated">—</dd></div><div><dt>金額単位</dt><dd>内部データは千円</dd></div></dl>
+          </div>
+        </section>
+      </div>
+
+      <noscript><p class="account-error">このページの表とグラフを表示するにはJavaScriptを有効にしてください。数値は上記の川崎市原資料から確認できます。</p></noscript>
+    </main>
+
+    <footer class="site-footer">
+      <div><p>かわさき Money Viewer</p><small>川崎市とは無関係の非公式サイト</small></div>
+      <nav class="footer-nav" aria-label="サイト案内">
+        <a href="./">補助・助成金</a>
+        <a href="general-account.html" aria-current="page">一般会計</a>
+        <a href="about.html">このサイト・データについて</a>
+        <a href="help.html">使い方・よくある質問</a>
+        <a href="policy.html">利用上の注意・プライバシー</a>
+      </nav>
+    </footer>
+  </body>
+</html>

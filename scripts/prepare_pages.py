@@ -11,9 +11,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 PUBLIC_FILES = (
-    "index.html", "about.html", "help.html", "policy.html", ".nojekyll",
-    "css/style.css", "js/data-validation.js", "js/app.js", "assets/brand-coin.svg",
-    "data/index.json", "data/trends.json",
+    "index.html", "general-account.html", "about.html", "help.html", "policy.html", ".nojekyll",
+    "css/style.css", "js/data-validation.js", "js/app.js", "js/general-account.js", "assets/brand-coin.svg",
+    "data/index.json", "data/trends.json", "data/general-account/R8.json",
 )
 
 

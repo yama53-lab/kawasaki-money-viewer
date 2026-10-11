@@ -14,4 +14,5 @@ for (const manifest of index.datasets) {
   records += dataset.recordCount;
 }
 const trends = security.validateTrends(read("data/trends.json", 16 * 1024 * 1024));
-console.log(`Validated ${index.datasets.length} datasets, ${records} records and ${Object.keys(trends.series).length} trend series.`);
+const generalAccount = security.validateGeneralAccount(read("data/general-account/R8.json", 512 * 1024));
+console.log(`Validated ${index.datasets.length} datasets, ${records} records, ${Object.keys(trends.series).length} trend series and ${generalAccount.yearLabel} general account data.`);

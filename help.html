@@ -17,9 +17,9 @@
       <div class="header-inner">
         <a class="brand" href="./" aria-label="かわさき Money Viewer トップ">
           <img class="brand-mark" src="assets/brand-coin.svg" alt="" aria-hidden="true" />
-          <span><strong>かわさき Money Viewer</strong><small>補助・助成金を見つける</small></span>
+          <span><strong>かわさき Money Viewer</strong><small>川崎市のお金を見つける</small></span>
         </a>
-        <a class="source-link source-link--header" href="./">検索ページへ <span aria-hidden="true">↗</span></a>
+        <nav class="site-nav" aria-label="主なコンテンツ"><a href="./">補助・助成金</a><a href="general-account.html">一般会計</a></nav>
       </div>
     </header>
     <main class="info-page" id="content">
@@ -33,6 +33,7 @@
         <nav class="info-toc" aria-label="このページの目次">
           <p class="section-number">CONTENTS</p>
           <a href="#search">検索の使い方</a>
+          <a href="#general-account">一般会計の見方</a>
           <a href="#budget">予算と決算の違い</a>
           <a href="#counts">掲載件数・集計の意味</a>
           <a href="#calculations">予算差・執行率の計算</a>
@@ -50,6 +51,13 @@
             </ol>
             <p>一覧は最初に30件を表示します。「続きを表示」で残りの項目を追加できます。条件を外したいときは、条件のラベルを押すか「条件をリセット」を使ってください。</p>
           </section>
+          <section id="general-account" aria-labelledby="general-account-title">
+            <p class="section-number">GENERAL ACCOUNT</p>
+            <h2 id="general-account-title">一般会計ページでは何が分かりますか？</h2>
+            <p>一般会計ページでは、川崎市の当初予算全体を「歳入」「目的別歳出」「性質別歳出」「市民1人あたり」の4方向から確認できます。補助・助成金の個別制度を探すページではなく、市の基本的な行政サービスに使うお金の全体像を見るページです。</p>
+            <p>現在の収録対象は令和8年度当初予算です。年度途中の補正予算は含まないため、最新の予算現額としては使用せず、川崎市の原資料も確認してください。</p>
+            <p>性質別歳出の「補助費等」は地方財政上の分類です。本サイトの「補助・助成金一覧」とは対象範囲が異なり、両者は合計と内訳の関係ではありません。</p>
+          </section>
           <section id="budget" aria-labelledby="budget-title">
             <p class="section-number">02 / BASIC</p>
             <h2 id="budget-title">予算と決算は何が違いますか？</h2>
@@ -57,7 +65,7 @@
               <div><dt>予算額</dt><dd>対象年度の予算資料に掲載された、支出を予定する金額です。</dd></div>
               <div><dt>決算額</dt><dd>対象年度の決算資料に掲載された、実際の支出結果の金額です。</dd></div>
             </dl>
-            <p>このサイトは一覧表に掲載された額を使用します。当初予算・補正予算などの内訳は独自に区別していません。どの時点の予算を示すかは、原資料で確認してください。</p>
+            <p>補助・助成金ページでは、一覧表に掲載された額を使用します。当初予算・補正予算などの内訳は独自に区別していません。どの時点の予算を示すかは、原資料で確認してください。</p>
             <p>予算額と決算額の差には、利用件数や事業内容の変化など、さまざまな理由があります。差額だけで「無駄」「不足」などを判断することはできません。</p>
           </section>
           <section id="counts" aria-labelledby="counts-title">
@@ -119,6 +127,8 @@
     <footer class="site-footer">
       <div><p>かわさき Money Viewer</p><small>川崎市とは無関係の非公式サイト</small></div>
       <nav class="footer-nav" aria-label="サイト案内">
+        <a href="./">補助・助成金</a>
+        <a href="general-account.html">一般会計</a>
         <a href="about.html">このサイト・データについて</a>
         <a href="help.html" aria-current="page">使い方・よくある質問</a>
         <a href="policy.html">利用上の注意・プライバシー</a>
