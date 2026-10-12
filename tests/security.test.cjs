@@ -181,6 +181,25 @@ test("Sankey grouping keeps totals and combines rows after the top seven", () =>
   assert.equal(grouped.reduce((sum, row) => sum + row.value, 0), generalAccount.summary.current);
   assert.deepEqual([...grouped.slice(0, 7)].map(row => row.value), [...grouped.slice(0, 7)].map(row => row.value).sort((a, b) => b - a));
 });
+
+test("Sankey labels keep a readable minimum vertical gap", () => {
+  const layoutStart = generalAccountSource.indexOf("function sankeyLabelPositions(");
+  const layoutEnd = generalAccountSource.indexOf("function sankeyBandPath(", layoutStart);
+  assert.ok(layoutStart >= 0 && layoutEnd > layoutStart);
+  const layoutContext = vm.createContext({});
+  vm.runInContext(generalAccountSource.slice(layoutStart, layoutEnd), layoutContext);
+  const nodes = [
+    { y0: 100, y1: 140 },
+    { y0: 145, y1: 155 },
+    { y0: 160, y1: 168 },
+    { y0: 172, y1: 176 },
+  ];
+  const positions = [...layoutContext.sankeyLabelPositions(nodes, 100, 260, 44)];
+  assert.equal(positions.length, nodes.length);
+  assert.ok(positions[0] >= 100);
+  assert.ok(positions.at(-1) <= 260);
+  positions.slice(1).forEach((position, index) => assert.ok(position - positions[index] >= 44));
+});
 test("general account page includes an accessible Sankey container", () => {
   const html = fs.readFileSync(path.join(root, "general-account.html"), "utf8");
   assert.match(html, /id="account-sankey"[^>]+role="img"/);

@@ -76,6 +76,26 @@ function sankeyColumnLayout(rows, x, nodeWidth, top, scale, gap) {
   });
 }
 
+function sankeyLabelPositions(nodes, minimum, maximum, minimumGap = 44) {
+  if (nodes.length === 0) return [];
+  if (nodes.length === 1) {
+    const center = (nodes[0].y0 + nodes[0].y1) / 2;
+    return [Math.min(maximum, Math.max(minimum, center))];
+  }
+  const gap = Math.min(minimumGap, (maximum - minimum) / (nodes.length - 1));
+  const positions = nodes.map((node) => Math.min(maximum, Math.max(minimum, (node.y0 + node.y1) / 2)));
+  for (let index = 1; index < positions.length; index += 1) {
+    positions[index] = Math.max(positions[index], positions[index - 1] + gap);
+  }
+  if (positions.at(-1) > maximum) {
+    positions[positions.length - 1] = maximum;
+    for (let index = positions.length - 2; index >= 0; index -= 1) {
+      positions[index] = Math.min(positions[index], positions[index + 1] - gap);
+    }
+  }
+  return positions;
+}
+
 function sankeyBandPath(x0, sourceTop, sourceBottom, x1, targetTop, targetBottom) {
   const middle = (x0 + x1) / 2;
   return [
@@ -110,6 +130,10 @@ function renderSankey(data) {
   const scale = availableForNodes / total;
   const revenueNodes = sankeyColumnLayout(revenueRows, leftX, sideWidth, top, scale, gap);
   const expenseNodes = sankeyColumnLayout(expenseRows, rightX, sideWidth, top, scale, gap);
+  const labelMinimum = top + 18;
+  const labelMaximum = height - bottom - 20;
+  const revenueLabelYs = sankeyLabelPositions(revenueNodes, labelMinimum, labelMaximum);
+  const expenseLabelYs = sankeyLabelPositions(expenseNodes, labelMinimum, labelMaximum);
   const centerHeight = total * scale;
   const centerTop = top + ((height - top - bottom) - centerHeight) / 2;
   const centerBottom = centerTop + centerHeight;
@@ -209,7 +233,7 @@ function renderSankey(data) {
 
   entries.filter(({ element }) => element.classList.contains("sankey-link")).forEach(({ element, item }) => bindPointer(element, item));
 
-  function addNode(node, side, labelSide) {
+  function addNode(node, side, labelSide, labelY) {
     const item = { ...node, side };
     const group = svgElement("g", {
       class: `sankey-node sankey-node--${side === "歳入" ? "revenue" : "expense"} sankey-item${node.other ? " sankey-node--other" : ""}`,
@@ -224,15 +248,22 @@ function renderSankey(data) {
     const middleY = (node.y0 + node.y1) / 2;
     const hitX = labelSide === "left" ? 8 : node.x0;
     const hitWidth = labelSide === "left" ? node.x1 - 8 : width - node.x0 - 8;
-    const hit = svgElement("rect", { x: hitX, y: middleY - 22, width: hitWidth, height: 44, class: "sankey-node-hit" });
+    const hit = svgElement("rect", { x: hitX, y: labelY - 22, width: hitWidth, height: 44, class: "sankey-node-hit" });
     const bar = svgElement("rect", { x: node.x0, y: node.y0, width: node.x1 - node.x0, height: Math.max(node.y1 - node.y0, 1), class: "sankey-node-bar" });
-    const name = svgElement("text", { x: labelX, y: middleY - 2, "text-anchor": anchor, class: "sankey-node-name" });
+    const guideStartX = labelSide === "left" ? node.x0 - 4 : node.x1 + 4;
+    const guideEndX = labelSide === "left" ? node.x0 - 10 : node.x1 + 10;
+    const guide = svgElement("path", {
+      d: `M${guideStartX},${middleY} L${guideEndX},${labelY}`,
+      class: "sankey-label-guide",
+      "aria-hidden": "true",
+    });
+    const name = svgElement("text", { x: labelX, y: labelY - 2, "text-anchor": anchor, class: "sankey-node-name" });
     name.textContent = node.name;
-    const value = svgElement("text", { x: labelX, y: middleY + 16, "text-anchor": anchor, class: "sankey-node-value" });
+    const value = svgElement("text", { x: labelX, y: labelY + 16, "text-anchor": anchor, class: "sankey-node-value" });
     value.textContent = `${readableAmount(node.value)} / ${percent(node.value, total)}`;
     const nativeTitle = svgElement("title");
     nativeTitle.textContent = `${node.name}：${readableAmount(node.value)}（${percent(node.value, total)}）`;
-    group.append(nativeTitle, hit, bar, name, value);
+    group.append(nativeTitle, hit, bar, guide, name, value);
     bindPointer(group, item);
     group.addEventListener("focus", () => { if (!pinnedKey) showSelection(item); });
     group.addEventListener("blur", () => { if (!pinnedKey) resetSelection(); });
@@ -249,8 +280,8 @@ function renderSankey(data) {
     entries.push({ element: group, item });
   }
 
-  revenueNodes.forEach((node) => addNode(node, "歳入", "left"));
-  expenseNodes.forEach((node) => addNode(node, "目的別歳出", "right"));
+  revenueNodes.forEach((node, index) => addNode(node, "歳入", "left", revenueLabelYs[index]));
+  expenseNodes.forEach((node, index) => addNode(node, "目的別歳出", "right", expenseLabelYs[index]));
 
   const totalItem = { key: "general-account", name: `${data.yearLabel}一般会計`, value: total, side: "一般会計", other: false, count: 1 };
   const centerGroup = svgElement("g", {
