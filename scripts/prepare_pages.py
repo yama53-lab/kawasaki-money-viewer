@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PUBLIC_FILES = (
     "index.html", "general-account.html", "about.html", "help.html", "policy.html", ".nojekyll",
     "css/style.css", "js/data-validation.js", "js/app.js", "js/general-account.js", "assets/brand-coin.svg",
-    "data/index.json", "data/trends.json", "data/general-account/R8.json",
+    "data/index.json", "data/trends.json", "data/general-account/index.json",
 )
 
 
@@ -25,6 +25,11 @@ def prepare(output: Path | None = None) -> Path:
         if not re.fullmatch(r"(budget|settlement)/[RH][1-9]\d{0,2}\.json", dataset["file"]):
             raise ValueError("Invalid dataset filename")
         files.append("data/" + dataset["file"])
+    general_account_manifest = json.loads((ROOT / "data/general-account/index.json").read_text(encoding="utf-8"))
+    for dataset in general_account_manifest["datasets"]:
+        if not re.fullmatch(r"[RH][1-9]\d{0,2}\.json", dataset["file"]):
+            raise ValueError("Invalid general account dataset filename")
+        files.append("data/general-account/" + dataset["file"])
     for relative in files:
         source = ROOT / relative
         if source.resolve() != source or not source.is_file():

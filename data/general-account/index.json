@@ -1,0 +1,9 @@
+{
+  "type": "generalAccountIndex",
+  "updatedAt": "2026-10-12",
+  "datasets": [
+    { "year": "R8", "yearLabel": "令和8年度", "sortYear": 2026, "file": "R8.json" },
+    { "year": "R7", "yearLabel": "令和7年度", "sortYear": 2025, "file": "R7.json" },
+    { "year": "R6", "yearLabel": "令和6年度", "sortYear": 2024, "file": "R6.json" }
+  ]
+}

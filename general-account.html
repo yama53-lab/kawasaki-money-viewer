@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'" />
     <meta name="referrer" content="no-referrer" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="川崎市の令和8年度一般会計当初予算を、歳入・目的別歳出・性質別歳出・市民1人あたりの使いみちから読み解く非公式ビューアです。" />
+    <meta name="description" content="川崎市の令和8〜6年度一般会計当初予算を、歳入・目的別歳出・性質別歳出・市民1人あたりの使いみちから読み解く非公式ビューアです。" />
     <meta name="theme-color" content="#063b4c" />
     <title>一般会計｜かわさき Money Viewer</title>
     <link rel="icon" type="image/svg+xml" href="assets/brand-coin.svg" />
@@ -27,7 +27,7 @@
             <a href="./">補助・助成金</a>
             <a href="general-account.html" aria-current="page">一般会計</a>
           </nav>
-          <a class="source-link source-link--header" href="https://www.city.kawasaki.jp/230/page/0000186101.html" target="_blank" rel="noopener noreferrer">
+          <a id="account-source-header" class="source-link source-link--header" href="https://www.city.kawasaki.jp/230/page/0000186101.html" target="_blank" rel="noopener noreferrer">
             川崎市の公開ページ <span aria-hidden="true">↗</span>
           </a>
         </div>
@@ -37,11 +37,15 @@
     <main id="content">
       <section class="account-hero" aria-labelledby="page-title">
         <div>
-          <p class="eyebrow">令和8年度 / 当初予算</p>
+          <p id="account-kicker" class="eyebrow">一般会計 / 当初予算</p>
           <h1 id="page-title">川崎市の一般会計を、<br />大きな流れから見る。</h1>
         </div>
         <div class="account-hero-copy">
           <p>福祉、子育て、教育、まちづくりなど、市の基本的な行政サービスに使うお金を「どこから集め、何に使うか」で整理しました。</p>
+          <label class="account-year-control" for="account-year-select">
+            <span>表示年度</span>
+            <select id="account-year-select" aria-label="一般会計の表示年度" disabled><option>読み込み中…</option></select>
+          </label>
           <p class="stage-note"><strong>当初予算</strong>　年度開始時点の予算です。年度途中の補正予算は含みません。</p>
         </div>
       </section>
@@ -104,12 +108,12 @@
         <section id="changes" class="account-section" aria-labelledby="changes-title">
           <div class="account-section-heading">
             <div><p class="section-number">02 / CHANGE</p><h2 id="changes-title">前年度から<br />どう変わった？</h2></div>
-            <p>令和7年度当初予算と比べた増減です。増減額の大きい項目を機械的に抽出しており、増減の理由を示すものではありません。</p>
+            <p id="changes-description">前年度当初予算と比べた増減です。増減額の大きい項目を機械的に抽出しており、増減の理由を示すものではありません。</p>
           </div>
           <div class="budget-comparison" aria-label="一般会計総額の前年度比較">
-            <div><span>令和7年度</span><strong id="comparison-previous">—</strong></div>
+            <div><span id="comparison-previous-label">前年度</span><strong id="comparison-previous">—</strong></div>
             <span class="comparison-arrow" aria-hidden="true">→</span>
-            <div><span>令和8年度</span><strong id="comparison-current">—</strong></div>
+            <div><span id="comparison-current-label">対象年度</span><strong id="comparison-current">—</strong></div>
             <p><strong id="comparison-difference">—</strong><span id="comparison-rate">—</span></p>
           </div>
           <div class="change-ranking-grid">
@@ -147,7 +151,7 @@
             <summary>歳入24項目の詳しい表を見る</summary>
             <div class="account-table-wrap" tabindex="0" aria-label="一般会計歳入予算一覧。横にスクロールできます">
               <table class="account-table">
-                <thead><tr><th scope="col">歳入</th><th scope="col" class="number-cell">令和8年度</th><th scope="col" class="number-cell">構成比</th><th scope="col" class="number-cell">令和7年度</th><th scope="col" class="number-cell">増減</th></tr></thead>
+                <thead><tr><th scope="col">歳入</th><th id="revenue-current-heading" scope="col" class="number-cell">対象年度</th><th scope="col" class="number-cell">構成比</th><th id="revenue-previous-heading" scope="col" class="number-cell">前年度</th><th scope="col" class="number-cell">増減</th></tr></thead>
                 <tbody id="revenue-body"></tbody>
               </table>
             </div>
@@ -166,7 +170,7 @@
             <summary>目的別歳出16項目の詳しい表を見る</summary>
             <div class="account-table-wrap" tabindex="0" aria-label="一般会計目的別歳出予算一覧。横にスクロールできます">
               <table class="account-table">
-                <thead><tr><th scope="col">目的</th><th scope="col" class="number-cell">令和8年度</th><th scope="col" class="number-cell">構成比</th><th scope="col" class="number-cell">令和7年度</th><th scope="col" class="number-cell">増減</th></tr></thead>
+                <thead><tr><th scope="col">目的</th><th id="purpose-current-heading" scope="col" class="number-cell">対象年度</th><th scope="col" class="number-cell">構成比</th><th id="purpose-previous-heading" scope="col" class="number-cell">前年度</th><th scope="col" class="number-cell">増減</th></tr></thead>
                 <tbody id="purpose-body"></tbody>
               </table>
             </div>
@@ -185,7 +189,7 @@
         <section id="per-capita" class="account-section" aria-labelledby="per-capita-title">
           <div class="account-section-heading">
             <div><p class="section-number">06 / PER PERSON</p><h2 id="per-capita-title">市民1人あたりで見ると？</h2></div>
-            <p>令和8年1月1日現在の推計人口1,559,207人を基に、市民1人あたりの使いみちへ換算した公式資料の分類です。</p>
+            <p id="per-capita-description">対象年度の推計人口を基に、市民1人あたりの使いみちへ換算した公式資料の分類です。</p>
           </div>
           <div class="per-capita-total"><span>歳出総額</span><strong id="per-capita-total">—</strong><small>市民1人あたり</small></div>
           <ol id="per-capita-list" class="per-capita-list"></ol>
@@ -197,20 +201,20 @@
             <h2 id="subsidy-context-title">一般会計の中で見る</h2>
           </div>
           <div>
-            <p>令和8年度の補助・助成金一覧から一般会計分を集計すると、<strong id="subsidy-total">—</strong>、一般会計当初予算の<strong id="subsidy-share">—</strong>です。</p>
+            <p><span id="subsidy-year-label">対象年度</span>の補助・助成金一覧から一般会計分を集計すると、<strong id="subsidy-total">—</strong>、一般会計当初予算の<strong id="subsidy-share">—</strong>です。</p>
             <p class="account-footnote">この比率は本サイトの補助・助成金データを一般会計区分で集計した参考値です。性質別歳出の「補助費等」とは定義が異なります。</p>
-            <a class="secondary-button account-link-button" href="./?type=budget&amp;year=R8">令和8年度の補助・助成金を見る</a>
+            <a id="subsidy-year-link" class="secondary-button account-link-button" href="./?type=budget&amp;year=R8">対象年度の補助・助成金を見る</a>
           </div>
         </section>
 
         <section class="account-source" aria-labelledby="source-title">
           <div><p class="section-number">07 / SOURCE</p><h2 id="source-title">出典と注意</h2></div>
           <div>
-            <p>川崎市が2026年3月30日に公開した令和8年度当初予算の計数資料を基に、本サイトで表とグラフへ整理しました。金額は千円単位の原数値から換算しています。</p>
+            <p id="account-source-description">川崎市の一般会計当初予算資料を基に、本サイトで表とグラフへ整理しました。金額は千円単位の原数値から換算しています。</p>
             <p class="caution">年度途中の補正予算は反映していません。正確な数値、最新の予算状況、用語の定義は川崎市の原資料をご確認ください。本サイトは川崎市とは無関係の非公式サイトです。</p>
             <div class="source-links">
-              <a id="account-source-page" class="source-link" href="https://www.city.kawasaki.jp/230/page/0000186101.html" target="_blank" rel="noopener noreferrer">川崎市「令和8年度予算について」 <span aria-hidden="true">↗</span></a>
-              <a id="account-source-pdf" class="source-link" href="https://www.city.kawasaki.jp/230/cmsfiles/contents/0000186/186101/26bunkatuban6_antore.pdf" target="_blank" rel="noopener noreferrer">計数資料PDF <span aria-hidden="true">↗</span></a>
+              <a id="account-source-page" class="source-link" href="https://www.city.kawasaki.jp/230/page/0000186101.html" target="_blank" rel="noopener noreferrer"><span id="account-source-page-label">川崎市の公開ページ</span> <span aria-hidden="true">↗</span></a>
+              <a id="account-source-pdf" class="source-link" href="https://www.city.kawasaki.jp/230/cmsfiles/contents/0000186/186101/26bunkatuban6_antore.pdf" target="_blank" rel="noopener noreferrer"><span id="account-source-pdf-label">原資料PDF</span> <span aria-hidden="true">↗</span></a>
             </div>
             <dl class="account-source-meta"><div><dt>対象</dt><dd id="account-source-label">—</dd></div><div><dt>データ更新</dt><dd id="account-updated">—</dd></div><div><dt>金額単位</dt><dd>内部データは千円</dd></div></dl>
           </div>

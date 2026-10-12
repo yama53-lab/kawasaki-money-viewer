@@ -1489,6 +1489,46 @@ footer p {
   font-size: 1.05rem;
 }
 
+.account-year-control {
+  display: grid;
+  grid-template-columns: auto minmax(9rem, 1fr);
+  gap: 0.8rem;
+  align-items: center;
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid #c9d5d8;
+  background: var(--white);
+}
+
+.account-year-control span {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.account-year-control select {
+  width: 100%;
+  min-height: 2.5rem;
+  padding: 0.45rem 2.2rem 0.45rem 0.7rem;
+  border: 1px solid #9fb3b8;
+  border-radius: 0;
+  color: var(--deep);
+  background: #fff;
+  font: inherit;
+  font-weight: 800;
+}
+
+.account-year-control select:focus-visible {
+  outline: 3px solid rgba(0, 127, 133, 0.28);
+  outline-offset: 2px;
+}
+
+.account-year-control select:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
 .stage-note {
   margin-bottom: 0;
   padding: 0.85rem 1rem;

@@ -2,6 +2,7 @@
 const DataSecurity = (() => {
   const MAX_AMOUNT = Math.floor(Number.MAX_SAFE_INTEGER / 1000);
   const FILE_PATTERN = /^(budget|settlement)\/[RH][1-9]\d{0,2}\.json$/;
+  const GENERAL_ACCOUNT_FILE_PATTERN = /^[RH][1-9]\d{0,2}\.json$/;
   const normalizeName = (value) => value.normalize("NFKC").toLowerCase()
     .replace(/[\s\u3000・･]/g, "").replace(/[‐‑‒–—―－]/g, "-");
   const check = (condition, message) => { if (!condition) throw new Error(`データの検証に失敗しました：${message}`); };
@@ -48,6 +49,11 @@ const DataSecurity = (() => {
 
   function datasetFile(value) {
     check(typeof value === "string" && FILE_PATTERN.test(value), "年度ファイル名");
+    return value;
+  }
+
+  function generalAccountFile(value) {
+    check(typeof value === "string" && GENERAL_ACCOUNT_FILE_PATTERN.test(value), "一般会計年度ファイル名");
     return value;
   }
 
@@ -150,6 +156,23 @@ const DataSecurity = (() => {
     return value;
   }
 
+  function validateGeneralAccountIndex(value) {
+    check(record(value) && value.type === "generalAccountIndex" && validDate(value.updatedAt), "一般会計年度一覧");
+    check(Array.isArray(value.datasets) && value.datasets.length > 0 && value.datasets.length <= 50, "一般会計年度一覧の件数");
+    const keys = new Set();
+    let previousSortYear = 2201;
+    for (const dataset of value.datasets) {
+      check(record(dataset), "一般会計年度一覧の項目");
+      const year = yearInfo(dataset.year);
+      check(dataset.yearLabel === year.label && dataset.sortYear === year.sortYear, "一般会計年度一覧の年度");
+      check(generalAccountFile(dataset.file) === `${dataset.year}.json`, "一般会計年度一覧のファイル");
+      check(!keys.has(dataset.year) && year.sortYear < previousSortYear, "一般会計年度一覧の重複または順序");
+      keys.add(dataset.year);
+      previousSortYear = year.sortYear;
+    }
+    return value;
+  }
+
   function validateTrends(value) {
     check(record(value) && validDate(value.updatedAt) && record(value.series), "年度推移の構造");
     const entries = Object.entries(value.series);
@@ -180,6 +203,8 @@ const DataSecurity = (() => {
     check(value.unit === "千円" && validDate(value.updatedAt), "一般会計の単位・更新日");
     sourcePageUrl(value.sourcePageUrl);
     sourcePdfUrl(value.sourceUrl);
+    check(text(value.sourcePageLabel, true, 256) && text(value.sourcePdfLabel, true, 128)
+      && text(value.sourceDescription, true, 512), "一般会計の出典表示");
     check(record(value.summary), "一般会計の概要");
     const summary = value.summary;
     for (const key of ["current", "previous", "population", "perCapitaYen", "autonomous", "dependent"]) {
@@ -196,8 +221,10 @@ const DataSecurity = (() => {
         check(record(row) && row.order === index + 1 && text(row.name, true, 256), "一般会計の明細");
         check(integer(row.current) && integer(row.previous), "一般会計の明細金額");
         if (resources) {
-          check(integer(row.specificResources) && integer(row.generalResources)
-            && row.specificResources + row.generalResources === row.current, "歳出の財源内訳");
+          const hasSpecific = Object.hasOwn(row, "specificResources");
+          const hasGeneral = Object.hasOwn(row, "generalResources");
+          check((!hasSpecific && !hasGeneral) || (integer(row.specificResources) && integer(row.generalResources)
+            && row.specificResources + row.generalResources === row.current), "歳出の財源内訳");
         }
         current += row.current;
         previous += row.previous;
@@ -234,13 +261,18 @@ const DataSecurity = (() => {
     check(Array.isArray(value.perCapita) && value.perCapita.length === 13, "市民1人あたりの区分");
     let perCapitaAmount = 0;
     let perCapitaYen = 0;
+    let perCapitaAmountRows = 0;
     value.perCapita.forEach((row, index) => {
       check(record(row) && row.order === index + 1 && text(row.name, true, 256)
-        && integer(row.amount) && integer(row.yen), "市民1人あたりの明細");
-      perCapitaAmount += row.amount;
+        && integer(row.yen) && (!Object.hasOwn(row, "amount") || integer(row.amount)), "市民1人あたりの明細");
+      if (Object.hasOwn(row, "amount")) {
+        perCapitaAmount += row.amount;
+        perCapitaAmountRows++;
+      }
       perCapitaYen += row.yen;
     });
-    check(perCapitaAmount === summary.current && perCapitaYen === summary.perCapitaYen, "市民1人あたりの合計");
+    check((perCapitaAmountRows === 0 || (perCapitaAmountRows === value.perCapita.length && perCapitaAmount === summary.current))
+      && perCapitaYen === summary.perCapitaYen, "市民1人あたりの合計");
 
     check(record(value.subsidyContext) && integer(value.subsidyContext.records, 10000)
       && integer(value.subsidyContext.activeRecords, value.subsidyContext.records)
@@ -248,7 +280,10 @@ const DataSecurity = (() => {
     return value;
   }
 
-  return Object.freeze({ sourcePdfUrl, sourcePageUrl, datasetFile, fetchJson, validateIndex, validateDataset, validateTrends, validateGeneralAccount });
+  return Object.freeze({
+    sourcePdfUrl, sourcePageUrl, datasetFile, generalAccountFile, fetchJson,
+    validateIndex, validateDataset, validateTrends, validateGeneralAccountIndex, validateGeneralAccount,
+  });
 })();
 
 if (typeof module !== "undefined" && module.exports) module.exports = DataSecurity;

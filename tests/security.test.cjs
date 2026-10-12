@@ -9,13 +9,16 @@ const index = read("data/index.json");
 const dataset = read("data/settlement/R6.json");
 const manifest = index.datasets.find(item => item.type === "settlement" && item.year === "R6");
 const trends = read("data/trends.json");
-const generalAccount = read("data/general-account/R8.json");
+const generalAccountIndex = read("data/general-account/index.json");
+const generalAccounts = generalAccountIndex.datasets.map(item => read(`data/general-account/${item.file}`));
+const generalAccount = generalAccounts[0];
 
 test("all actual datasets and graph series pass validation", () => {
   security.validateIndex(index);
   for (const item of index.datasets) security.validateDataset(read(`data/${item.file}`), item);
   security.validateTrends(trends);
-  security.validateGeneralAccount(generalAccount);
+  security.validateGeneralAccountIndex(generalAccountIndex);
+  for (const item of generalAccounts) security.validateGeneralAccount(item);
 });
 
 for (const url of ["https://example.invalid/230/page/0000186101.html", "http://www.city.kawasaki.jp/230/page/0000186101.html",
@@ -138,13 +141,23 @@ test("reject inherited property-like trend keys and excessive points", () => {
   assert.throws(() => security.validateTrends(large));
 });
 
+test("reject unsafe or duplicate general account manifest entries", () => {
+  const unsafe = structuredClone(generalAccountIndex);
+  unsafe.datasets[0].file = "../R8.json";
+  assert.throws(() => security.validateGeneralAccountIndex(unsafe));
+  const duplicate = structuredClone(generalAccountIndex);
+  duplicate.datasets.push(duplicate.datasets[0]);
+  assert.throws(() => security.validateGeneralAccountIndex(duplicate));
+});
+
 // Exercise the actual bar builder without starting the page or fetching data.
 const vm = require("node:vm");
 const appSource = fs.readFileSync(path.join(root, "js/app.js"), "utf8");
 const generalAccountSource = fs.readFileSync(path.join(root, "js/general-account.js"), "utf8");
 test("both pages use the shared JSON loader", () => {
   assert.match(appSource, /const fetchJson = DataSecurity\.fetchJson/);
-  assert.match(generalAccountSource, /DataSecurity\.fetchJson\(GENERAL_ACCOUNT_URL/);
+  assert.match(generalAccountSource, /DataSecurity\.fetchJson\(GENERAL_ACCOUNT_INDEX_URL/);
+  assert.match(generalAccountSource, /DataSecurity\.generalAccountFile\(manifest\.file\)/);
 });
 const dateFormatStart = appSource.indexOf("function formatDisplayDate(");
 const dateFormatEnd = appSource.indexOf("function formatReadableAmount(", dateFormatStart);
@@ -172,6 +185,7 @@ test("general account page includes an accessible Sankey container", () => {
   const html = fs.readFileSync(path.join(root, "general-account.html"), "utf8");
   assert.match(html, /id="account-sankey"[^>]+role="img"/);
   assert.match(html, /id="sankey-detail"[^>]+aria-live="polite"/);
+  assert.match(html, /id="account-year-select"/);
   assert.match(html, /特定の歳入が特定の歳出に充てられたことを示すものではありません/);
 });
 const barStart = appSource.indexOf("function createTrendBar(");

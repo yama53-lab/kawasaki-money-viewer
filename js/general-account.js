@@ -1,10 +1,23 @@
-const GENERAL_ACCOUNT_URL = "data/general-account/R8.json";
+const GENERAL_ACCOUNT_INDEX_URL = "data/general-account/index.json";
 
 const integerFormat = new Intl.NumberFormat("ja-JP");
 const decimalFormat = new Intl.NumberFormat("ja-JP", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+let generalAccountIndex = null;
+let generalAccountLoadToken = 0;
 
-async function fetchGeneralAccount() {
-  return DataSecurity.validateGeneralAccount(await DataSecurity.fetchJson(GENERAL_ACCOUNT_URL, 512 * 1024));
+async function fetchGeneralAccountIndex() {
+  return DataSecurity.validateGeneralAccountIndex(
+    await DataSecurity.fetchJson(GENERAL_ACCOUNT_INDEX_URL, 64 * 1024),
+  );
+}
+
+async function fetchGeneralAccount(manifest) {
+  const file = DataSecurity.generalAccountFile(manifest.file);
+  const data = DataSecurity.validateGeneralAccount(
+    await DataSecurity.fetchJson(`data/general-account/${file}`, 512 * 1024),
+  );
+  if (data.year !== manifest.year || data.yearLabel !== manifest.yearLabel) throw new Error("年度一覧とデータが一致しません");
+  return data;
 }
 
 function readableAmount(value) {
@@ -267,12 +280,12 @@ function renderSankey(data) {
   nodesLayer.append(centerGroup);
   entries.push({ element: centerGroup, item: totalItem });
   svg.append(nodesLayer);
-  svg.addEventListener("click", (event) => {
+  svg.onclick = (event) => {
     if (event.target === svg) {
       pinnedKey = null;
       resetSelection();
     }
-  });
+  };
 }
 
 function amountCell(value) {
@@ -442,9 +455,16 @@ function renderPerCapita(data) {
 function renderGeneralAccount(data) {
   const total = data.summary.current;
   const difference = total - data.summary.previous;
+  document.querySelector("#account-kicker").textContent = `${data.yearLabel} / ${data.budgetStageLabel}`;
+  document.querySelector("#changes-description").textContent = `${data.previousYearLabel}当初予算と比べた増減です。増減額の大きい項目を機械的に抽出しており、増減の理由を示すものではありません。`;
+  document.querySelector("#comparison-previous-label").textContent = data.previousYearLabel;
+  document.querySelector("#comparison-current-label").textContent = data.yearLabel;
+  for (const id of ["revenue-current-heading", "purpose-current-heading"]) document.querySelector(`#${id}`).textContent = data.yearLabel;
+  for (const id of ["revenue-previous-heading", "purpose-previous-heading"]) document.querySelector(`#${id}`).textContent = data.previousYearLabel;
   document.querySelector("#account-total").textContent = readableAmount(total);
   document.querySelector("#account-total-source").textContent = `原資料：${sourceAmount(total)}`;
   document.querySelector("#account-change").textContent = readableAmount(difference);
+  document.querySelector("#account-change").classList.remove("summary-up", "summary-down");
   document.querySelector("#account-change").classList.add(difference >= 0 ? "summary-up" : "summary-down");
   document.querySelector("#account-change-rate").textContent = `前年度比 ${changeRate(total, data.summary.previous)}`;
   document.querySelector("#account-per-capita").textContent = `${integerFormat.format(data.summary.perCapitaYen)}円`;
@@ -461,26 +481,91 @@ function renderGeneralAccount(data) {
   renderNature(data);
   renderPerCapita(data);
 
+  const populationDate = data.yearLabel.replace(/年度$/, "年1月1日");
+  const roundedPerCapita = data.perCapita.every((item) => !Object.hasOwn(item, "amount"));
+  document.querySelector("#per-capita-description").textContent = `${populationDate}現在の推計人口${integerFormat.format(data.summary.population)}人を基に、市民1人あたりの使いみちへ換算した公式資料の分類です。${roundedPerCapita ? " 金額は公式資料の表示に合わせ、千円単位に丸めています。" : ""}`;
+  document.querySelector("#subsidy-year-label").textContent = data.yearLabel;
   document.querySelector("#subsidy-total").textContent = `${readableAmount(data.subsidyContext.total)}（${integerFormat.format(data.subsidyContext.records)}件）`;
   document.querySelector("#subsidy-share").textContent = percent(data.subsidyContext.total, total);
+  const subsidyLink = document.querySelector("#subsidy-year-link");
+  subsidyLink.href = `./?type=budget&year=${encodeURIComponent(data.year)}`;
+  subsidyLink.textContent = `${data.yearLabel}の補助・助成金を見る`;
+  document.querySelector("#account-source-header").href = DataSecurity.sourcePageUrl(data.sourcePageUrl);
   document.querySelector("#account-source-page").href = DataSecurity.sourcePageUrl(data.sourcePageUrl);
   document.querySelector("#account-source-pdf").href = DataSecurity.sourcePdfUrl(data.sourceUrl);
+  document.querySelector("#account-source-description").textContent = `川崎市が公開した${data.sourceDescription}を基に、本サイトで表とグラフへ整理しました。金額は千円単位の原数値から換算しています。`;
+  document.querySelector("#account-source-page-label").textContent = data.sourcePageLabel;
+  document.querySelector("#account-source-pdf-label").textContent = data.sourcePdfLabel;
   document.querySelector("#account-source-label").textContent = `${data.yearLabel} 一般会計 ${data.budgetStageLabel}`;
-  document.querySelector("#account-updated").textContent = data.updatedAt.replace(/^(\d{4})-(\d{2})-(\d{2})$/, "$1年$2月$3日");
+  const updated = /^(\d{4})-(\d{2})-(\d{2})$/.exec(data.updatedAt);
+  document.querySelector("#account-updated").textContent = updated
+    ? `${updated[1]}年${Number(updated[2])}月${Number(updated[3])}日`
+    : data.updatedAt;
+  document.title = `${data.yearLabel}一般会計｜かわさき Money Viewer`;
+}
+
+function updateGeneralAccountUrl(year) {
+  const url = new URL(location.href);
+  url.searchParams.set("year", year);
+  history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+}
+
+async function loadGeneralAccount(manifest) {
+  const token = ++generalAccountLoadToken;
+  const content = document.querySelector("#account-content");
+  const status = document.querySelector("#account-status");
+  const errorPanel = document.querySelector("#account-error");
+  const yearSelect = document.querySelector("#account-year-select");
+  status.hidden = false;
+  status.textContent = `${manifest.yearLabel}の一般会計データを読み込んでいます…`;
+  errorPanel.hidden = true;
+  content.setAttribute("aria-busy", "true");
+  yearSelect.disabled = true;
+  try {
+    const data = await fetchGeneralAccount(manifest);
+    if (token !== generalAccountLoadToken) return;
+    renderGeneralAccount(data);
+    updateGeneralAccountUrl(data.year);
+    status.hidden = true;
+    content.setAttribute("aria-busy", "false");
+  } catch (error) {
+    if (token !== generalAccountLoadToken) return;
+    console.error(error);
+    status.textContent = "データを読み込めませんでした";
+    errorPanel.hidden = false;
+    content.setAttribute("aria-busy", "false");
+  } finally {
+    if (token === generalAccountLoadToken) yearSelect.disabled = false;
+  }
 }
 
 async function initializeGeneralAccount() {
-  const content = document.querySelector("#account-content");
+  const yearSelect = document.querySelector("#account-year-select");
   try {
-    const data = await fetchGeneralAccount();
-    renderGeneralAccount(data);
-    document.querySelector("#account-status").hidden = true;
-    content.setAttribute("aria-busy", "false");
+    generalAccountIndex = await fetchGeneralAccountIndex();
+    const fragment = document.createDocumentFragment();
+    generalAccountIndex.datasets.forEach((manifest) => {
+      const option = document.createElement("option");
+      option.value = manifest.year;
+      option.textContent = manifest.yearLabel;
+      fragment.append(option);
+    });
+    yearSelect.replaceChildren(fragment);
+    const requestedYear = new URLSearchParams(location.search).get("year");
+    const initial = generalAccountIndex.datasets.find((item) => item.year === requestedYear)
+      || generalAccountIndex.datasets[0];
+    yearSelect.value = initial.year;
+    yearSelect.addEventListener("change", () => {
+      const manifest = generalAccountIndex.datasets.find((item) => item.year === yearSelect.value);
+      if (manifest) loadGeneralAccount(manifest);
+    });
+    await loadGeneralAccount(initial);
   } catch (error) {
     console.error(error);
-    document.querySelector("#account-status").textContent = "データを読み込めませんでした";
+    document.querySelector("#account-status").textContent = "年度一覧を読み込めませんでした";
     document.querySelector("#account-error").hidden = false;
-    content.setAttribute("aria-busy", "false");
+    document.querySelector("#account-content").setAttribute("aria-busy", "false");
+    yearSelect.disabled = true;
   }
 }
 
