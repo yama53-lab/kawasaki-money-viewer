@@ -2187,7 +2187,7 @@ footer p {
 
 .per-capita-total {
   display: grid;
-  width: min(20rem, 100%);
+  width: 100%;
   min-height: 11rem;
   place-content: center;
   margin: 0 auto 2rem;
