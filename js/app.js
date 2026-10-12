@@ -88,6 +88,13 @@ const formatSourceAmount = (value) => value === null
   ? "—"
   : `${value < 0 ? "−" : ""}${yen.format(Math.abs(value))}千円`;
 
+function formatDisplayDate(value) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return value;
+  const [, year, month, day] = match;
+  return `${year}年${Number(month)}月${Number(day)}日`;
+}
+
 function formatReadableAmount(value) {
   if (value === null) return "—";
   const absolute = Math.abs(value);
@@ -469,7 +476,7 @@ function updateDatasetUI() {
     document.querySelector("#change-heading").textContent = "予算差";
     document.querySelector("#years-heading").textContent = "執行率";
     document.querySelector("#source-dataset").textContent = `${data.yearLabel}の予算・決算比較`;
-    document.querySelector("#source-updated").textContent = data.updatedAt.replaceAll("-", "/");
+    document.querySelector("#source-updated").textContent = formatDisplayDate(data.updatedAt);
     document.querySelector("#source-count").textContent = `${yen.format(data.recordCount)}件（名称一致 ${yen.format(data.matchedCount)}件）`;
     const settlementLink = document.querySelector("#source-pdf-link");
     setSourceLink(settlementLink, data.sourceUrl);
@@ -511,7 +518,7 @@ function updateDatasetUI() {
   document.querySelector("#change-heading").textContent = "増減";
   document.querySelector("#years-heading").textContent = "継続";
   document.querySelector("#source-dataset").textContent = `${data.yearLabel}${data.typeLabel}${hasPrevious ? `（${data.previousYearLabel}比較）` : ""}`;
-  document.querySelector("#source-updated").textContent = data.updatedAt.replaceAll("-", "/");
+  document.querySelector("#source-updated").textContent = formatDisplayDate(data.updatedAt);
   document.querySelector("#source-count").textContent = `${yen.format(data.recordCount)}件（支出・計上なしを含む）`;
   const sourceLink = document.querySelector("#source-pdf-link");
   setSourceLink(sourceLink, data.sourceUrl);

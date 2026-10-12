@@ -146,6 +146,15 @@ test("both pages use the shared JSON loader", () => {
   assert.match(appSource, /const fetchJson = DataSecurity\.fetchJson/);
   assert.match(generalAccountSource, /DataSecurity\.fetchJson\(GENERAL_ACCOUNT_URL/);
 });
+const dateFormatStart = appSource.indexOf("function formatDisplayDate(");
+const dateFormatEnd = appSource.indexOf("function formatReadableAmount(", dateFormatStart);
+assert.ok(dateFormatStart >= 0 && dateFormatEnd > dateFormatStart);
+const dateFormatContext = vm.createContext({});
+vm.runInContext(appSource.slice(dateFormatStart, dateFormatEnd), dateFormatContext);
+test("dataset update dates use the Japanese display format", () => {
+  assert.equal(dateFormatContext.formatDisplayDate("2026-10-03"), "2026年10月3日");
+  assert.equal(dateFormatContext.formatDisplayDate("invalid"), "invalid");
+});
 const sankeyGroupStart = generalAccountSource.indexOf("function groupSankeyRows(");
 const sankeyGroupEnd = generalAccountSource.indexOf("function sankeyColumnLayout(", sankeyGroupStart);
 assert.ok(sankeyGroupStart >= 0 && sankeyGroupEnd > sankeyGroupStart);
