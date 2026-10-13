@@ -9,6 +9,8 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+from generate_seo_pages import generate_seo_pages
+
 ROOT = Path(__file__).resolve().parent.parent
 PUBLIC_FILES = (
     "index.html", "general-account.html", "about.html", "help.html", "policy.html", ".nojekyll",
@@ -49,6 +51,7 @@ def prepare(output: Path | None = None) -> Path:
         destination = output / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / relative, destination)
+    generate_seo_pages(output)
     return output
 
 

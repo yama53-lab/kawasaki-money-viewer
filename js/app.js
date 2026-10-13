@@ -1,6 +1,7 @@
 const INDEX_URL = "data/index.json";
 const PAGE_SIZE = 30;
 const MAX_KEYWORD_LENGTH = 200;
+const DEFAULT_TITLE = "川崎市の補助金・助成金一覧｜予算・決算を検索・比較";
 
 const state = {
   index: null,
@@ -74,7 +75,7 @@ function clearDatasetDisplay() {
   }
   document.querySelector("#source-budget-pdf-link").hidden = true;
   document.querySelector("#dataset-kicker").textContent = "予算・決算データ";
-  document.title = "かわさき Money Viewer";
+  document.title = DEFAULT_TITLE;
   setSearchDisabled(true);
 }
 
@@ -488,7 +489,7 @@ function updateDatasetUI() {
     elements.status.textContent = `比較可能：${datasets.at(-1).optionLabel || datasets.at(-1).yearLabel}〜${datasets[0].yearLabel}`;
     elements.change.disabled = false;
     elements.change.title = "";
-    document.title = `${data.yearLabel} 予算・決算比較｜かわさき Money Viewer`;
+    document.title = `川崎市 ${data.yearLabel}の補助金｜予算・決算比較`;
     return;
   }
 
@@ -528,7 +529,7 @@ function updateDatasetUI() {
   elements.status.textContent = `${data.typeLabel} ${datasets.at(-1).yearLabel}〜${datasets[0].yearLabel}を収録`;
   elements.change.disabled = !hasPrevious;
   elements.change.title = hasPrevious ? "" : "この年度の原資料には前年度額が掲載されていません";
-  document.title = `${data.yearLabel}${data.typeLabel}｜かわさき Money Viewer`;
+  document.title = `川崎市 ${data.yearLabel}の補助金・助成金｜${data.typeLabel}一覧`;
 }
 
 function rebuildFilters() {
@@ -844,6 +845,7 @@ elements.typeButtons.forEach((button) => {
     state.type = button.dataset.type;
     state.year = availableDatasets()[0].year;
     populateYears();
+    history.replaceState(null, "", `?type=${encodeURIComponent(state.type)}&year=${encodeURIComponent(state.year)}`);
     await loadDataset().catch(showError);
   });
 });
@@ -851,6 +853,7 @@ elements.typeButtons.forEach((button) => {
 elements.year.addEventListener("change", async () => {
   if (!state.index) return;
   state.year = elements.year.value;
+  history.replaceState(null, "", `?type=${encodeURIComponent(state.type)}&year=${encodeURIComponent(state.year)}`);
   await loadDataset().catch(showError);
 });
 

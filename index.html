@@ -2,15 +2,22 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-KBUsL17b8M8sc5mcbfyzy5wKOoU3JQcp4lXZ1Jx03DA='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'" />
     <meta name="referrer" content="no-referrer" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="川崎市が公開する補助・助成金一覧を検索し、年度間や同年度の予算・決算を比較できる非公式ビューアです。"
+      content="川崎市の補助金・助成金約14,000件を年度別に検索。令和8年度予算から令和6年度決算まで、予算額・決算額・年度推移を比較できる非公式サイトです。"
     />
     <meta name="theme-color" content="#063b4c" />
-    <title>かわさき Money Viewer</title>
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="川崎市の補助金・助成金一覧｜予算・決算を検索・比較" />
+    <meta property="og:description" content="川崎市の補助金・助成金約14,000件を年度別に検索し、予算・決算・年度推移を比較できます。" />
+    <meta property="og:url" content="https://yama53-lab.github.io/kawasaki-money-viewer/" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="canonical" href="https://yama53-lab.github.io/kawasaki-money-viewer/" />
+    <title>川崎市の補助金・助成金一覧｜予算・決算を検索・比較</title>
     <link
       rel="icon"
       type="image/svg+xml"
@@ -19,6 +26,7 @@
     <link rel="stylesheet" href="css/style.css" />
     <script src="js/data-validation.js" defer></script>
     <script src="js/app.js" defer></script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"川崎市の補助金・助成金 予算・決算データ","description":"川崎市が公開する補助・助成金一覧表を、予算・決算・年度ごとに検索・比較できるよう整理した非公式データセットです。","url":"https://yama53-lab.github.io/kawasaki-money-viewer/","isAccessibleForFree":true,"inLanguage":"ja","temporalCoverage":"2005/2026","dateModified":"2026-10-03","sameAs":["https://www.city.kawasaki.jp/230/page/0000075957.html","https://www.city.kawasaki.jp/230/page/0000148865.html"],"distribution":{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://yama53-lab.github.io/kawasaki-money-viewer/data/index.json"}}</script>
   </head>
   <body>
     <a class="skip-link" href="#results">検索結果へ移動</a>
@@ -54,7 +62,7 @@
       <section class="intro" aria-labelledby="page-title">
         <div>
           <p class="eyebrow" id="dataset-kicker">予算・決算 / 40年度資料</p>
-          <h1 id="page-title">年度を越えて、<br />数字を読み解く。</h1>
+          <h1 id="page-title">川崎市の補助金・助成金<br />年度別検索</h1>
         </div>
         <p class="intro-copy">
           川崎市がPDFで公開する予算と決算を整理。年度を切り替えながら検索し、同じ年度の予算額と決算額も比較できます。
@@ -277,6 +285,7 @@
       <nav class="footer-nav" aria-label="サイト案内">
         <a href="./" aria-current="page">補助・助成金</a>
         <a href="general-account.html">一般会計</a>
+        <a href="years/">年度別一覧</a>
         <a href="about.html">このサイト・データについて</a>
         <a href="help.html">使い方・よくある質問</a>
         <a href="policy.html">利用上の注意・プライバシー</a>
