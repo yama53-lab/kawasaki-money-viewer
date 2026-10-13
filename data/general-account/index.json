@@ -1,9 +1,20 @@
 {
   "type": "generalAccountIndex",
-  "updatedAt": "2026-10-12",
+  "updatedAt": "2026-10-13",
   "datasets": [
     { "year": "R8", "yearLabel": "令和8年度", "sortYear": 2026, "file": "R8.json" },
     { "year": "R7", "yearLabel": "令和7年度", "sortYear": 2025, "file": "R7.json" },
-    { "year": "R6", "yearLabel": "令和6年度", "sortYear": 2024, "file": "R6.json" }
+    { "year": "R6", "yearLabel": "令和6年度", "sortYear": 2024, "file": "R6.json" },
+    { "year": "R5", "yearLabel": "令和5年度", "sortYear": 2023, "file": "R5.json" },
+    { "year": "R4", "yearLabel": "令和4年度", "sortYear": 2022, "file": "R4.json" },
+    { "year": "R3", "yearLabel": "令和3年度", "sortYear": 2021, "file": "R3.json" },
+    { "year": "R2", "yearLabel": "令和2年度", "sortYear": 2020, "file": "R2.json" },
+    { "year": "R1", "yearLabel": "令和元年度", "sortYear": 2019, "file": "R1.json" },
+    { "year": "H30", "yearLabel": "平成30年度", "sortYear": 2018, "file": "H30.json" },
+    { "year": "H29", "yearLabel": "平成29年度", "sortYear": 2017, "file": "H29.json" },
+    { "year": "H28", "yearLabel": "平成28年度", "sortYear": 2016, "file": "H28.json" },
+    { "year": "H27", "yearLabel": "平成27年度", "sortYear": 2015, "file": "H27.json" },
+    { "year": "H26", "yearLabel": "平成26年度", "sortYear": 2014, "file": "H26.json" },
+    { "year": "H25", "yearLabel": "平成25年度", "sortYear": 2013, "file": "H25.json" }
   ]
 }

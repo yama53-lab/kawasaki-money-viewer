@@ -205,6 +205,8 @@ const DataSecurity = (() => {
     sourcePdfUrl(value.sourceUrl);
     check(text(value.sourcePageLabel, true, 256) && text(value.sourcePdfLabel, true, 128)
       && text(value.sourceDescription, true, 512), "一般会計の出典表示");
+    check(!Object.hasOwn(value, "populationDateLabel") || text(value.populationDateLabel, true, 32), "人口基準日");
+    if (Object.hasOwn(value, "subsidyYear")) yearInfo(value.subsidyYear);
     check(record(value.summary), "一般会計の概要");
     const summary = value.summary;
     for (const key of ["current", "previous", "population", "perCapitaYen", "autonomous", "dependent"]) {
@@ -213,8 +215,8 @@ const DataSecurity = (() => {
     check(summary.current > 0 && summary.previous > 0 && summary.population > 0
       && summary.autonomous + summary.dependent === summary.current, "一般会計の概要集計");
 
-    const validateRows = (rows, expectedLength, resources = false) => {
-      check(Array.isArray(rows) && rows.length === expectedLength, "一般会計の明細件数");
+    const validateRows = (rows, minimumLength, maximumLength = minimumLength, resources = false) => {
+      check(Array.isArray(rows) && rows.length >= minimumLength && rows.length <= maximumLength, "一般会計の明細件数");
       let current = 0;
       let previous = 0;
       rows.forEach((row, index) => {
@@ -233,8 +235,8 @@ const DataSecurity = (() => {
       return { current, previous };
     };
 
-    const revenue = validateRows(value.revenue, 24);
-    const purpose = validateRows(value.expenditurePurpose, 16, true);
+    const revenue = validateRows(value.revenue, 20, 30);
+    const purpose = validateRows(value.expenditurePurpose, 16, 16, true);
     check(revenue.current === summary.current && revenue.previous === summary.previous
       && purpose.current === summary.current && purpose.previous === summary.previous, "歳入・歳出の合計");
 
@@ -271,8 +273,9 @@ const DataSecurity = (() => {
       }
       perCapitaYen += row.yen;
     });
+    const roundedDifference = Math.abs(perCapitaYen - summary.perCapitaYen);
     check((perCapitaAmountRows === 0 || (perCapitaAmountRows === value.perCapita.length && perCapitaAmount === summary.current))
-      && perCapitaYen === summary.perCapitaYen, "市民1人あたりの合計");
+      && (perCapitaAmountRows === 0 ? roundedDifference <= 15000 : perCapitaYen === summary.perCapitaYen), "市民1人あたりの合計");
 
     check(record(value.subsidyContext) && integer(value.subsidyContext.records, 10000)
       && integer(value.subsidyContext.activeRecords, value.subsidyContext.records)

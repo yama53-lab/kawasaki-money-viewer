@@ -5,12 +5,12 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'" />
     <meta name="referrer" content="no-referrer" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="川崎市の令和8〜6年度一般会計当初予算を、歳入・目的別歳出・性質別歳出・市民1人あたりの使いみちから読み解く非公式ビューアです。" />
+    <meta name="description" content="川崎市の令和8年度〜平成25年度一般会計当初予算を、歳入・目的別歳出・性質別歳出・市民1人あたりの使いみちから読み解く非公式ビューアです。" />
     <meta name="theme-color" content="#063b4c" />
     <meta property="og:locale" content="ja_JP" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="川崎市の一般会計予算｜年度別に比較" />
-    <meta property="og:description" content="川崎市の令和8〜6年度一般会計当初予算を、歳入・目的別歳出・性質別歳出・市民1人あたりで比較できます。" />
+    <meta property="og:description" content="川崎市の令和8年度〜平成25年度一般会計当初予算を、歳入・目的別歳出・性質別歳出・市民1人あたりで比較できます。" />
     <meta property="og:url" content="https://yama53-lab.github.io/kawasaki-money-viewer/general-account.html" />
     <link rel="canonical" href="https://yama53-lab.github.io/kawasaki-money-viewer/general-account.html" />
     <title>川崎市の一般会計予算｜年度別に比較</title>
@@ -133,7 +133,7 @@
         <section id="revenue" class="account-section" aria-labelledby="revenue-title">
           <div class="account-section-heading">
             <div><p class="section-number">03 / REVENUE</p><h2 id="revenue-title">お金はどこから来る？</h2></div>
-            <p>市税、国や県からの支出金、市債など、一般会計に入るお金を24の「款」で分類しています。</p>
+            <p id="revenue-description">市税、国や県からの支出金、市債など、一般会計に入るお金を「款」で分類しています。</p>
           </div>
 
           <div class="account-feature-grid">
@@ -154,7 +154,7 @@
           </div>
 
           <details class="account-details">
-            <summary>歳入24項目の詳しい表を見る</summary>
+            <summary id="revenue-details-summary">歳入の詳しい表を見る</summary>
             <div class="account-table-wrap" tabindex="0" aria-label="一般会計歳入予算一覧。横にスクロールできます">
               <table class="account-table">
                 <thead><tr><th scope="col">歳入</th><th id="revenue-current-heading" scope="col" class="number-cell">対象年度</th><th scope="col" class="number-cell">構成比</th><th id="revenue-previous-heading" scope="col" class="number-cell">前年度</th><th scope="col" class="number-cell">増減</th></tr></thead>
@@ -167,7 +167,7 @@
         <section id="purpose" class="account-section" aria-labelledby="purpose-title">
           <div class="account-section-heading">
             <div><p class="section-number">04 / PURPOSE</p><h2 id="purpose-title">何のために使う？</h2></div>
-            <p>行政の目的に沿って見ると、健康福祉、こども、教育の3分野で一般会計の約半分を占めます。</p>
+            <p>行政の目的に沿って、健康福祉、こども、教育、まちづくりなどに使うお金を分類しています。</p>
           </div>
           <div class="chart-panel chart-panel--wide">
             <ol id="purpose-chart" class="account-bar-list account-bar-list--wide"></ol>

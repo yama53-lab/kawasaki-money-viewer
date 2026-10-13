@@ -501,6 +501,8 @@ function renderGeneralAccount(data) {
   document.querySelector("#account-per-capita").textContent = `${integerFormat.format(data.summary.perCapitaYen)}円`;
   document.querySelector("#account-population").textContent = `推計人口 ${integerFormat.format(data.summary.population)}人で算出`;
   document.querySelector("#account-autonomous-share").textContent = percent(data.summary.autonomous, total);
+  document.querySelector("#revenue-description").textContent = `市税、国や県からの支出金、市債など、一般会計に入るお金を${integerFormat.format(data.revenue.length)}の「款」で分類しています。`;
+  document.querySelector("#revenue-details-summary").textContent = `歳入${integerFormat.format(data.revenue.length)}項目の詳しい表を見る`;
 
   renderSankey(data);
   renderChanges(data);
@@ -512,14 +514,14 @@ function renderGeneralAccount(data) {
   renderNature(data);
   renderPerCapita(data);
 
-  const populationDate = data.yearLabel.replace(/年度$/, "年1月1日");
+  const populationDate = data.populationDateLabel || data.yearLabel.replace(/年度$/, "年1月1日");
   const roundedPerCapita = data.perCapita.every((item) => !Object.hasOwn(item, "amount"));
   document.querySelector("#per-capita-description").textContent = `${populationDate}現在の推計人口${integerFormat.format(data.summary.population)}人を基に、市民1人あたりの使いみちへ換算した公式資料の分類です。${roundedPerCapita ? " 金額は公式資料の表示に合わせ、千円単位に丸めています。" : ""}`;
   document.querySelector("#subsidy-year-label").textContent = data.yearLabel;
   document.querySelector("#subsidy-total").textContent = `${readableAmount(data.subsidyContext.total)}（${integerFormat.format(data.subsidyContext.records)}件）`;
   document.querySelector("#subsidy-share").textContent = percent(data.subsidyContext.total, total);
   const subsidyLink = document.querySelector("#subsidy-year-link");
-  subsidyLink.href = `./?type=budget&year=${encodeURIComponent(data.year)}`;
+  subsidyLink.href = `./?type=budget&year=${encodeURIComponent(data.subsidyYear || data.year)}`;
   subsidyLink.textContent = `${data.yearLabel}の補助・助成金を見る`;
   document.querySelector("#account-source-header").href = DataSecurity.sourcePageUrl(data.sourcePageUrl);
   document.querySelector("#account-source-page").href = DataSecurity.sourcePageUrl(data.sourcePageUrl);

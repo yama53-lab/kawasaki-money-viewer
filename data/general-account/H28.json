@@ -1,0 +1,404 @@
+{
+  "type": "generalAccount",
+  "year": "H28",
+  "yearLabel": "平成28年度",
+  "previousYearLabel": "平成27年度",
+  "budgetStage": "initial",
+  "budgetStageLabel": "当初予算",
+  "unit": "千円",
+  "updatedAt": "2026-10-13",
+  "sourcePageUrl": "https://www.city.kawasaki.jp/230/page/0000077700.html",
+  "sourceUrl": "https://www.city.kawasaki.jp/230/cmsfiles/contents/0000077/77700/005-2.pdf",
+  "sourcePageLabel": "川崎市「財政のあらまし平成28年6月版」",
+  "sourcePdfLabel": "款別当初予算PDF",
+  "sourceDescription": "財政のあらまし平成28年6月版の当初予算資料",
+  "populationDateLabel": "平成28年1月1日",
+  "summary": {
+    "current": 638982234,
+    "previous": 618872041,
+    "population": 1477223,
+    "perCapitaYen": 433000,
+    "autonomous": 409415731,
+    "dependent": 229566503
+  },
+  "revenue": [
+    {
+      "order": 1,
+      "name": "市税",
+      "current": 301545853,
+      "previous": 296274667
+    },
+    {
+      "order": 2,
+      "name": "地方譲与税",
+      "current": 3270199,
+      "previous": 3348712
+    },
+    {
+      "order": 3,
+      "name": "利子割交付金",
+      "current": 157837,
+      "previous": 467226
+    },
+    {
+      "order": 4,
+      "name": "配当割交付金",
+      "current": 2726308,
+      "previous": 2400991
+    },
+    {
+      "order": 5,
+      "name": "株式等譲渡所得割交付金",
+      "current": 717649,
+      "previous": 698872
+    },
+    {
+      "order": 6,
+      "name": "地方消費税交付金",
+      "current": 23244966,
+      "previous": 24534311
+    },
+    {
+      "order": 7,
+      "name": "ゴルフ場利用税交付金",
+      "current": 37468,
+      "previous": 37669
+    },
+    {
+      "order": 8,
+      "name": "自動車取得税交付金",
+      "current": 1036509,
+      "previous": 653292
+    },
+    {
+      "order": 9,
+      "name": "軽油引取税交付金",
+      "current": 3878219,
+      "previous": 4036335
+    },
+    {
+      "order": 10,
+      "name": "地方特例交付金",
+      "current": 1031611,
+      "previous": 1053200
+    },
+    {
+      "order": 11,
+      "name": "地方交付税",
+      "current": 621592,
+      "previous": 749569
+    },
+    {
+      "order": 12,
+      "name": "交通安全対策特別交付金",
+      "current": 408715,
+      "previous": 438933
+    },
+    {
+      "order": 13,
+      "name": "分担金及び負担金",
+      "current": 10589047,
+      "previous": 9343037
+    },
+    {
+      "order": 14,
+      "name": "使用料及び手数料",
+      "current": 17299566,
+      "previous": 17525175
+    },
+    {
+      "order": 15,
+      "name": "国庫支出金",
+      "current": 109696907,
+      "previous": 104917881
+    },
+    {
+      "order": 16,
+      "name": "県支出金",
+      "current": 23532523,
+      "previous": 23392987
+    },
+    {
+      "order": 17,
+      "name": "財産収入",
+      "current": 5135487,
+      "previous": 4621349
+    },
+    {
+      "order": 18,
+      "name": "寄附金",
+      "current": 376697,
+      "previous": 381186
+    },
+    {
+      "order": 19,
+      "name": "繰入金",
+      "current": 34876314,
+      "previous": 29502076
+    },
+    {
+      "order": 20,
+      "name": "繰越金",
+      "current": 100000,
+      "previous": 100000
+    },
+    {
+      "order": 21,
+      "name": "諸収入",
+      "current": 39492767,
+      "previous": 42797573
+    },
+    {
+      "order": 22,
+      "name": "市債",
+      "current": 59206000,
+      "previous": 51597000
+    }
+  ],
+  "expenditurePurpose": [
+    {
+      "order": 1,
+      "name": "議会費",
+      "current": 1712852,
+      "previous": 1748353
+    },
+    {
+      "order": 2,
+      "name": "総務費",
+      "current": 47345817,
+      "previous": 49327792
+    },
+    {
+      "order": 3,
+      "name": "市民文化費",
+      "current": 7709490,
+      "previous": 6016143
+    },
+    {
+      "order": 4,
+      "name": "こども未来費",
+      "current": 95396398,
+      "previous": 91377708
+    },
+    {
+      "order": 5,
+      "name": "健康福祉費",
+      "current": 139735008,
+      "previous": 137602554
+    },
+    {
+      "order": 6,
+      "name": "環境費",
+      "current": 19143679,
+      "previous": 22860770
+    },
+    {
+      "order": 7,
+      "name": "経済労働費",
+      "current": 32073357,
+      "previous": 31619834
+    },
+    {
+      "order": 8,
+      "name": "建設緑政費",
+      "current": 33785383,
+      "previous": 26617676
+    },
+    {
+      "order": 9,
+      "name": "港湾費",
+      "current": 12223184,
+      "previous": 10015863
+    },
+    {
+      "order": 10,
+      "name": "まちづくり費",
+      "current": 27516708,
+      "previous": 25973620
+    },
+    {
+      "order": 11,
+      "name": "区役所費",
+      "current": 13631002,
+      "previous": 14995554
+    },
+    {
+      "order": 12,
+      "name": "消防費",
+      "current": 17152998,
+      "previous": 19093114
+    },
+    {
+      "order": 13,
+      "name": "教育費",
+      "current": 49399485,
+      "previous": 42973503
+    },
+    {
+      "order": 14,
+      "name": "公債費",
+      "current": 73561173,
+      "previous": 73820439
+    },
+    {
+      "order": 15,
+      "name": "諸支出金",
+      "current": 68095700,
+      "previous": 64329118
+    },
+    {
+      "order": 16,
+      "name": "予備費",
+      "current": 500000,
+      "previous": 500000
+    }
+  ],
+  "expenditureNature": [
+    {
+      "order": 1,
+      "name": "義務的経費",
+      "current": 336293672,
+      "previous": 325988690,
+      "items": [
+        {
+          "name": "人件費",
+          "current": 95150383,
+          "previous": 94406140
+        },
+        {
+          "name": "扶助費",
+          "current": 167961047,
+          "previous": 158148725
+        },
+        {
+          "name": "公債費",
+          "current": 73182242,
+          "previous": 73433825
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "name": "投資的経費",
+      "current": 98390728,
+      "previous": 88012952,
+      "items": [
+        {
+          "name": "普通建設事業費",
+          "current": 98311790,
+          "previous": 87632072
+        },
+        {
+          "name": "災害復旧事業費",
+          "current": 78938,
+          "previous": 380880
+        }
+      ]
+    },
+    {
+      "order": 3,
+      "name": "その他の経費",
+      "current": 204297834,
+      "previous": 204870399,
+      "items": [
+        {
+          "name": "物件費",
+          "current": 68017414,
+          "previous": 66206209
+        },
+        {
+          "name": "維持補修費",
+          "current": 6754601,
+          "previous": 6764134
+        },
+        {
+          "name": "補助費等",
+          "current": 58359898,
+          "previous": 61868402
+        },
+        {
+          "name": "繰出金",
+          "current": 34818303,
+          "previous": 31805187
+        },
+        {
+          "name": "その他",
+          "current": 36347618,
+          "previous": 38226467
+        }
+      ]
+    }
+  ],
+  "perCapita": [
+    {
+      "order": 1,
+      "name": "保健・医療・福祉の充実に",
+      "yen": 123000
+    },
+    {
+      "order": 2,
+      "name": "子育ての支援に",
+      "yen": 68000
+    },
+    {
+      "order": 3,
+      "name": "道路・公園緑地・河川・下水道の整備と安全なまちづくりに",
+      "yen": 62000
+    },
+    {
+      "order": 4,
+      "name": "学校教育と生涯学習に",
+      "yen": 39000
+    },
+    {
+      "order": 5,
+      "name": "計画的なまちづくりに",
+      "yen": 24000
+    },
+    {
+      "order": 6,
+      "name": "行政運営に",
+      "yen": 23000
+    },
+    {
+      "order": 7,
+      "name": "地域経済の発展に",
+      "yen": 22000
+    },
+    {
+      "order": 8,
+      "name": "環境・リサイクルに",
+      "yen": 18000
+    },
+    {
+      "order": 9,
+      "name": "港湾の整備に",
+      "yen": 12000
+    },
+    {
+      "order": 10,
+      "name": "区政の振興に",
+      "yen": 11000
+    },
+    {
+      "order": 11,
+      "name": "共生と参加のまちづくりに",
+      "yen": 1000
+    },
+    {
+      "order": 12,
+      "name": "交通・水道の経営安定に",
+      "yen": 1000
+    },
+    {
+      "order": 13,
+      "name": "その他",
+      "yen": 23000
+    }
+  ],
+  "subsidyContext": {
+    "records": 358,
+    "activeRecords": 337,
+    "total": 20953516
+  }
+}
