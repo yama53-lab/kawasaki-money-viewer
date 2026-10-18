@@ -25,6 +25,7 @@ MAX_HTML_BYTES = 2 * 1024 * 1024
 MAX_PDF_BYTES = 32 * 1024 * 1024
 MAX_PDF_PAGES = 200
 MAX_ITEMS = 10000
+MAX_EXTRACT_MEMORY_BYTES = 2 * 1024 * 1024 * 1024
 
 
 def validate_source_url(url: str, *, pdf_only: bool = False) -> str:
@@ -257,10 +258,14 @@ def extract_pdf(pdf_path: Path) -> tuple[list[dict], tuple[int, int | None] | No
 
 
 def extract_with_limits(pdf_path: Path) -> tuple[list[dict], tuple[int, int | None] | None]:
-    result = subprocess.run(
-        [sys.executable, str(Path(__file__).resolve()), "--extract-one", str(pdf_path.resolve())],
-        check=True, capture_output=True, timeout=180,
-    )
+    try:
+        result = subprocess.run(
+            [sys.executable, str(Path(__file__).resolve()), "--extract-one", str(pdf_path.resolve())],
+            check=True, capture_output=True, timeout=180,
+        )
+    except subprocess.CalledProcessError as error:
+        details = error.stderr.decode("utf-8", errors="replace")[-8192:].strip()
+        raise RuntimeError(f"Failed to extract {pdf_path.name}: {details}") from error
     if len(result.stdout) > 8 * 1024 * 1024:
         raise ValueError("Extracted JSON is oversized")
     result_data = json.loads(result.stdout)
@@ -291,7 +296,13 @@ def main() -> None:
             raise ValueError("Invalid or oversized cached PDF")
         if sys.platform == "linux":
             import resource
-            resource.setrlimit(resource.RLIMIT_AS, (1024 * 1024 * 1024, 1024 * 1024 * 1024))
+            # pdfminer can reserve more than 1 GiB of virtual address space for
+            # older, graphics-heavy documents even while its RSS stays much
+            # lower. Keep extraction bounded without rejecting the H29 source.
+            resource.setrlimit(
+                resource.RLIMIT_AS,
+                (MAX_EXTRACT_MEMORY_BYTES, MAX_EXTRACT_MEMORY_BYTES),
+            )
             resource.setrlimit(resource.RLIMIT_CPU, (120, 120))
         items, total = extract_pdf(args.extract_one)
         print(json.dumps({"items": items, "declared_total": total}, ensure_ascii=False))
