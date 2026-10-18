@@ -195,7 +195,7 @@ def render_year_index(datasets: list[dict], updated_at: str) -> str:
     body = f"""<main class="dataset-page" id="content">
       <nav class="breadcrumbs" aria-label="パンくずリスト"><a href="../">トップ</a><span>›</span><span>年度別一覧</span></nav>
       <section class="dataset-hero">
-        <p class="eyebrow">YEAR INDEX / 40 DATASETS</p>
+        <p class="eyebrow">YEAR INDEX / {len(datasets)} DATASETS</p>
         <h1>川崎市の補助金・助成金<br />年度別一覧</h1>
         <p>{escape(description)} 各年度ページには、名称・所管局・交付先・金額を掲載しています。</p>
         <a class="secondary-button" href="../">検索・比較ツールを開く</a>

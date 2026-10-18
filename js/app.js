@@ -459,7 +459,7 @@ function updateDatasetUI() {
   if (isComparison) {
     const variance = data.settlementTotal - data.budgetTotal;
     const rate = data.budgetTotal > 0 ? (data.settlementTotal / data.budgetTotal) * 100 : null;
-    document.querySelector("#dataset-kicker").textContent = `${data.yearLabel} 予算・決算比較 / 18年度比較可能`;
+    document.querySelector("#dataset-kicker").textContent = `${data.yearLabel} 予算・決算比較 / ${comparisonDatasets().length}年度比較可能`;
     document.querySelector("#summary-count-label").textContent = "名称が一致した項目";
     document.querySelector("#summary-count").textContent = `${yen.format(data.matchedCount)}件`;
     document.querySelector("#summary-count-note").textContent = `全${yen.format(data.recordCount)}件中、名称一致`;
@@ -496,7 +496,7 @@ function updateDatasetUI() {
   const hasPrevious = data.previousTotal !== null;
   const difference = hasPrevious ? data.currentTotal - data.previousTotal : null;
   const comparison = hasPrevious ? `${data.previousYearLabel}との比較` : "原資料に前年度額の掲載なし";
-  document.querySelector("#dataset-kicker").textContent = `${data.yearLabel}${data.typeLabel} / 全40年度資料`;
+  document.querySelector("#dataset-kicker").textContent = `${data.yearLabel}${data.typeLabel} / 全${state.index.datasets.length}年度資料`;
   const zeroAmountCount = data.recordCount - data.activeCount;
   document.querySelector("#summary-count-label").textContent = "掲載件数";
   document.querySelector("#summary-count").textContent = `全${yen.format(data.recordCount)}件`;

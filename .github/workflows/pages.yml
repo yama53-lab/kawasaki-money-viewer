@@ -1,4 +1,4 @@
-name: Publish GitHub Pages (manual)
+name: Refresh data and publish GitHub Pages
 
 on:
   workflow_dispatch:
@@ -14,12 +14,21 @@ jobs:
   build:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
+    env:
+      TZ: Asia/Tokyo
+      PYTHONUNBUFFERED: "1"
     steps:
       - name: Checkout
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
+      - name: Install PDF extraction dependencies
+        run: python3 -m pip install --disable-pip-version-check --requirement scripts/requirements-update.txt
+      - name: Refresh subsidy datasets from official PDFs
+        run: python3 scripts/update_data.py --pdf-dir tmp/pdfs --output data
+      - name: Rebuild general account manifest
+        run: python3 scripts/update_general_account.py
       - name: Test data validation
         run: node --test tests/security.test.cjs
       - name: Test download safeguards
